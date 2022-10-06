@@ -12,7 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.trecyclerview.holder.BaseHolder;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.TempOrderListdetailAdapter;
-import com.htsing.pos.bean.ShopOrderDetailBean;
+import com.htsing.pos.bean.ShopOrderDetail;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.utils.BigDecimalUtils;
 import com.htsing.pos.utils.PreferencesUtil;
@@ -20,7 +20,7 @@ import com.htsing.pos.utils.PreferencesUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TempOrderListHolder extends BaseListVH<ShopOrderDetailBean.DataBean.RecordsBean> {
+public class TempOrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.RecordsBean> {
 
 
     private ListViewItemClickInterface itemClickInterface;
@@ -45,7 +45,7 @@ public class TempOrderListHolder extends BaseListVH<ShopOrderDetailBean.DataBean
 
 
     @Override
-    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetailBean.DataBean.RecordsBean item) {
+    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetail.DataBean.RecordsBean item) {
         if (item == null) {
             return;
         }
@@ -121,6 +121,6 @@ public class TempOrderListHolder extends BaseListVH<ShopOrderDetailBean.DataBean
     }
 
     public interface ListViewItemClickInterface {
-        void onHandleItemClick(ShopOrderDetailBean.DataBean.RecordsBean item);
+        void onHandleItemClick(ShopOrderDetail.DataBean.RecordsBean item);
     }
 }

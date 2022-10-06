@@ -18,8 +18,8 @@ import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.fragment.OrderListFragment;
-import com.htsing.pos.bean.ShopOrderDetailBean;
-import com.htsing.pos.bean.HomeMemberInfoBean;
+import com.htsing.pos.bean.ShopOrderDetail;
+import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.presenter.PrinterPresenter;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.htsing.pos.utils.PreferencesUtil;
@@ -115,7 +115,7 @@ public class OrderListActivity extends BaseAct {
         transaction.commit();
     }
 
-    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetailBean.DataBean.RecordsBean orderBean, HomeMemberInfoBean.DataBean memberInfoBean) {
+    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo.DataBean memberInfoBean) {
         XLog.d(goods_data);
         printerPresenter.setRelustOrder(orderBean);
         printerPresenter.setMemberInfoBean(memberInfoBean);

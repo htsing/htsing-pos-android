@@ -13,9 +13,10 @@ import com.htsing.pos.adapter.CategoryListAdapter;
 import com.htsing.pos.adapter.GoodsAdapter;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
-import com.htsing.pos.bean.CategoryBean;
-import com.htsing.pos.bean.ProductListBean;
+import com.htsing.pos.bean.Category;
+import com.htsing.pos.bean.ProductList;
 import com.htsing.pos.constant.Constant;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.xw.repo.XEditText;
@@ -45,9 +46,9 @@ public class HomeProductFragment extends HomeBaseFragment {
     //商品分类的listView适配器
     private CategoryListAdapter cataListAdapter;
     //首次加载获取的 商品列表
-    private List<ProductListBean.DataBean> cardList;
+    private List<ProductList.DataBean> cardList;
     //首次加载获取的 商品分类列表
-    private List<CategoryBean.DataBean> categoryList;
+    private List<Category.DataBean> categoryList;
 
     private BaseAct mBact;
 
@@ -117,7 +118,7 @@ public class HomeProductFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("shopId", Constant.getShopId());
             mBact.showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductListBean.class, stringResult -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductList.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -134,7 +135,7 @@ public class HomeProductFragment extends HomeBaseFragment {
             json.put("shopId", Constant.getShopId());
             json.put("prodName", prodName);
 //            mBact.showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductListBean.class, stringResult -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductList.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -145,27 +146,28 @@ public class HomeProductFragment extends HomeBaseFragment {
     /**
      * 获取商品列表的接口回调处理方法
      *
-     * @param result
+     * @param commonResult
      */
-    private void onProductsResult(ProductListBean result) {
+    private void onProductsResult(CommonResult commonResult) {
 //        mBact.showLoading(false);
-        if (result != null) {
-            List<ProductListBean.DataBean> data = result.getData().getRecords();
-            if (data != null && data.size() > 0) {
-                ProductListBean.DataBean bean = data.get(0);
+        if (commonResult != null) {
+//            List<ProductList.DataBean> data = result.getResult();
+            ProductList productList = (ProductList) commonResult.getResult();
+            if (productList != null && productList.getRecords().size() > 0) {
+                ProductList.DataBean bean = productList.getRecords().get(0);
                 String shopName = bean.getShopName();
 
 //                goodsAdapter = new GoodsAdapter(mBact, data, 1);
 //                goodGridView.setAdapter(goodsAdapter);
 
 //                cardList.addAll(data);
-                goodsAdapter.setNewData(data);
+                goodsAdapter.setNewData(productList.getRecords());
 
                 goodGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         //加入购物车，由 homeCartFragment 处理
-                        ProductListBean.DataBean bean1 = data.get(position);
+                        ProductList.DataBean bean1 = productList.getRecords().get(position);
 
                         BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GRIDVIEW_ITEM_CLICK);
                         eventBean.setValue(bean1);
@@ -190,7 +192,7 @@ public class HomeProductFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("shopId", "1");
 //            showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, CategoryBean.class, result -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, Category.class, result -> {
                 onCateGoryResult(result);
             });
         } catch (Exception e) {
@@ -203,7 +205,7 @@ public class HomeProductFragment extends HomeBaseFragment {
      * 根据店铺ID 获取 商品分类列表 的回调处方法
      * * @param result
      */
-    private void onCateGoryResult(CategoryBean result) {
+    private void onCateGoryResult(Category result) {
 //        showLoading(false);
         if (result != null) {
             categoryList = result.getData();
@@ -236,7 +238,7 @@ public class HomeProductFragment extends HomeBaseFragment {
 //            json.put("shopId", Constant.getShopId());
 //            json.put("categoryId", categoryId);
 //            mBact.showLoading();
-            easyGet(json, url, ProductListBean.class, stringResult -> {
+            easyGet(json, url, ProductList.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -256,7 +258,7 @@ public class HomeProductFragment extends HomeBaseFragment {
 
             JSONObject json = new JSONObject();
             mBact.showLoading();
-            easyGet(json, url, ProductListBean.class, result -> {
+            easyGet(json, url, ProductList.class, result -> {
                 onProductResultBybarCode(result);
 //                onProductsResult(result);
             });
@@ -265,18 +267,18 @@ public class HomeProductFragment extends HomeBaseFragment {
         }
     }
 
-    private void onProductResultBybarCode(ProductListBean result) {
+    private void onProductResultBybarCode(ProductList result) {
         mBact.showLoading(false);
         XLog.d("onProductsResult    = ");
         if (result != null) {
 
-            if (result.getData() == null) {
+            if (result.getRecords() == null) {
                 showToast("没有查询该产品");
                 return;
             }
 
-            List<ProductListBean.DataBean> data = result.getData().getRecords();
-            ProductListBean.DataBean bean = data.get(0);
+            List<ProductList.DataBean> data = result.getRecords();
+            ProductList.DataBean bean = data.get(0);
 
             if (bean != null) {
                 String shopName = bean.getShopName();

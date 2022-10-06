@@ -9,9 +9,9 @@ import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.holder.BaseListVH;
 import com.htsing.pos.adapter.holder.TempOrderListHolder;
-import com.htsing.pos.bean.ShopOrderDetailBean.DataBean.RecordsBean;
+import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
 import com.htsing.pos.base.fragment.BaseEventBean;
-import com.htsing.pos.bean.ShopOrderDetailBean;
+import com.htsing.pos.bean.ShopOrderDetail;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.ui.login.PosMainActivity;
@@ -106,7 +106,7 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
             }
 
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETTOPAIDORDER, ShopOrderDetailBean.class, stringResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETTOPAIDORDER, ShopOrderDetail.class, stringResult -> {
                 onOrderResult(stringResult);
             });
         } catch (Exception e) {
@@ -114,7 +114,7 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
         }
     }
 
-    private void onOrderResult(ShopOrderDetailBean relust) {
+    private void onOrderResult(ShopOrderDetail relust) {
         mBact.showLoading(false);
 
         try {

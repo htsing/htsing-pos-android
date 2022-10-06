@@ -15,11 +15,11 @@ import com.htsing.pos.adapter.OrderListdetailAdapter;
 import com.htsing.pos.adapter.holder.BaseListVH;
 import com.htsing.pos.adapter.holder.OrderListHolder;
 import com.htsing.pos.base.IBaseFragmentList;
-import com.htsing.pos.bean.HomeMemberInfoBean;
-import com.htsing.pos.bean.ShopOrderDetailBean;
-import com.htsing.pos.bean.ShopOrderDetailBean.DataBean.RecordsBean;
+import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.bean.ShopOrderDetail;
+import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
 import com.htsing.pos.constant.Constant;
-import com.htsing.pos.easyhttp.CommonResultBean;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.ui.login.OrderListActivity;
 import com.htsing.pos.utils.CommonUtils;
@@ -109,7 +109,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
     private OrderPrintUtils printUtils;
 
     //存储会员信息的对象
-    private HomeMemberInfoBean.DataBean memberInfoBean;
+    private HomeMemberInfo.DataBean memberInfoBean;
 
     @Override
     public int getLayout() {
@@ -241,7 +241,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
             }
 
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETALLORDERBYSHOPID, ShopOrderDetailBean.class, stringResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETALLORDERBYSHOPID, ShopOrderDetail.class, stringResult -> {
                 onOrderResult(stringResult);
             });
         } catch (Exception e) {
@@ -264,7 +264,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
             json.put("phone", phone);
 
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETALLORDERBYSHOPID, ShopOrderDetailBean.class, stringResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETALLORDERBYSHOPID, ShopOrderDetail.class, stringResult -> {
                 onOrderSearchResult(stringResult);
             });
         } catch (Exception e) {
@@ -274,7 +274,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
 
     private List<RecordsBean> mdataList = new ArrayList<>();
 
-    private void onOrderSearchResult(ShopOrderDetailBean relust) {
+    private void onOrderSearchResult(ShopOrderDetail relust) {
         mBact.showLoading(false);
 
         if (relust.getData().getRecords() == null || relust.getData().getRecords().size() == 0) {
@@ -286,7 +286,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
         initItemView(relust.getData().getRecords().get(0));
     }
 
-    private void onOrderResult(ShopOrderDetailBean relust) {
+    private void onOrderResult(ShopOrderDetail relust) {
         mBact.showLoading(false);
 
 
@@ -441,11 +441,11 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
             json.put("orderNumber", relustOrder.getOrderNumber());//订单编号
 
             //退款的产品
-            List<ShopOrderDetailBean.DataBean.RecordsBean.OrderItemsBean> orderItems = relustOrder.getOrderItems();
+            List<ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean> orderItems = relustOrder.getOrderItems();
             JSONArray jsonArray = new JSONArray();
             if (orderItems != null) {
 
-                for (ShopOrderDetailBean.DataBean.RecordsBean.OrderItemsBean bean : orderItems) {
+                for (ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean bean : orderItems) {
 //                    ConfirmOrderBean.OrderEntity orderEntity = comfirmOrderList.get(i);
 
                     JSONObject orderBean = new JSONObject();
@@ -460,7 +460,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
             json.put("cid", PreferencesUtil.getString(mBact, Constant.SP_CID));
             mBact.showLoading();
 
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.BACKOUT, CommonResultBean.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.BACKOUT, CommonResult.class, result -> {
                 onRefundResult(result);
             });
         } catch (Exception e) {
@@ -472,10 +472,10 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
     /**
      * 现金退款的回调处理函数
      *
-     * @param result
+     * @param commonResult
      */
-    private void onRefundResult(CommonResultBean result) {
-        if (result.getResultCode() == 200) {
+    private void onRefundResult(CommonResult commonResult) {
+        if (commonResult.getCode() == 200) {
 //            layout_pay_susses.setVisibility(View.GONE);
 //            layout_pay_state.setVisibility(View.VISIBLE);
             showToast("退款成功");
@@ -512,7 +512,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
 
             String stringUrl = buffer.toString();
 
-            easyPost(json, stringUrl, HomeMemberInfoBean.class, result -> {
+            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -522,7 +522,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
 
     }
 
-    private void onMemberResult(HomeMemberInfoBean relust) {
+    private void onMemberResult(HomeMemberInfo relust) {
         if (relust.getData() == null) {
             showToast("会员信息为空");
             return;

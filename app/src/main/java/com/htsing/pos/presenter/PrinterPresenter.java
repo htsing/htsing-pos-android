@@ -13,10 +13,10 @@ import com.sunmi.devicemanager.device.Device;
 import com.sunmi.devicesdk.core.PrinterManager;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.htsing.pos.R;
-import com.htsing.pos.bean.HomeMemberInfoBean;
+import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.bean.MenuBean;
-import com.htsing.pos.bean.RechargeBean;
-import com.htsing.pos.bean.ShopOrderDetailBean.DataBean.RecordsBean;
+import com.htsing.pos.bean.Recharge;
+import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.utils.BigDecimalUtils;
 import com.htsing.pos.utils.BitmapUtils;
@@ -46,10 +46,10 @@ public class PrinterPresenter {
     private PrinterManager mManager;
 
     private RecordsBean relustOrder;
-    private HomeMemberInfoBean.DataBean memberInfoBean;
+    private HomeMemberInfo.DataBean memberInfoBean;
 
 
-    public void setMemberInfoBean(HomeMemberInfoBean.DataBean memberInfoBean) {
+    public void setMemberInfoBean(HomeMemberInfo.DataBean memberInfoBean) {
         this.memberInfoBean = memberInfoBean;
     }
 
@@ -437,7 +437,7 @@ public class PrinterPresenter {
         sb.setLength(0);
     }
 
-    public void printMemberInfo(HomeMemberInfoBean.DataBean memberInfoBean, RechargeBean bean, final int payMode) {
+    public void printMemberInfo(HomeMemberInfo.DataBean memberInfoBean, Recharge bean, final int payMode) {
         if (printerService == null) {
             return;
         }

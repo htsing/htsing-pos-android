@@ -13,9 +13,9 @@ import com.elvishew.xlog.XLog;
 import com.htsing.pos.adapter.CardListAdapter;
 import com.htsing.pos.adapter.CategoryListAdapter;
 import com.htsing.pos.adapter.GoodsAdapter;
-import com.htsing.pos.bean.CategoryBean;
-import com.htsing.pos.bean.OrderSussesBean;
-import com.htsing.pos.bean.ProductListBean;
+import com.htsing.pos.bean.Category;
+import com.htsing.pos.bean.OrderSusses;
+import com.htsing.pos.bean.ProductList;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.fragment.OrderListFragment;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
@@ -44,9 +44,9 @@ public class MainActivity extends BaseAct  {
     //购物车列表里面的listView适配器
     private CardListAdapter cardListAdapter;
     //首次加载获取的商品列表
-    private List<ProductListBean.DataBean> cardList;
+    private List<ProductList.DataBean> cardList;
     //首次加载获取的商品分类
-    private List<CategoryBean.DataBean> categoryList;
+    private List<Category.DataBean> categoryList;
 
 
     //首次获取商品列表的GridView
@@ -126,7 +126,7 @@ public class MainActivity extends BaseAct  {
             JSONObject json = new JSONObject();
             json.put("shopId", Constant.getShopId());
             showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductListBean.class, stringResult -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductList.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -140,13 +140,13 @@ public class MainActivity extends BaseAct  {
      *
      * @param result
      */
-    private void onProductsResult(ProductListBean result) {
+    private void onProductsResult(ProductList result) {
         XLog.d("onProductsResult    = ");
         showLoading(false);
         if (result != null) {
-            List<ProductListBean.DataBean> data = result.getData().getRecords();
+            List<ProductList.DataBean> data = result.getRecords();
             if (data != null) {
-                ProductListBean.DataBean bean = data.get(0);
+                ProductList.DataBean bean = data.get(0);
                 String shopName = bean.getShopName();
                 XLog.d("shopName   = " + shopName);
 
@@ -158,7 +158,7 @@ public class MainActivity extends BaseAct  {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        ProductListBean.DataBean bean1 = data.get(position);
+                        ProductList.DataBean bean1 = data.get(position);
                         cardList.add(bean1);
                         cardListAdapter = new CardListAdapter(getApplicationContext(), cardList, 1);
                         cartListView.setAdapter(cardListAdapter);
@@ -182,7 +182,7 @@ public class MainActivity extends BaseAct  {
             json.put("shopId", Constant.getShopId());
             json.put("categoryId", categoryId);
             showLoading();
-            easyGet(json, getProductByShopIdUrl, ProductListBean.class, stringResult -> {
+            easyGet(json, getProductByShopIdUrl, ProductList.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -199,7 +199,7 @@ public class MainActivity extends BaseAct  {
             JSONObject json = new JSONObject();
             json.put("shopId", "1");
 //            showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, CategoryBean.class, result -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, Category.class, result -> {
                 onCateGoryResult(result);
             });
         } catch (Exception e) {
@@ -219,7 +219,7 @@ public class MainActivity extends BaseAct  {
             JSONObject json = new JSONObject();
             json.put("barCode", "400");
             showLoading();
-            easyGet(json, getProductByBarCodeUrl, ProductListBean.class, result -> {
+            easyGet(json, getProductByBarCodeUrl, ProductList.class, result -> {
                 onProductResultBybarCode(result);
             });
         } catch (Exception e) {
@@ -228,13 +228,13 @@ public class MainActivity extends BaseAct  {
         }
     }
 
-    private void onProductResultBybarCode(ProductListBean result) {
+    private void onProductResultBybarCode(ProductList result) {
         showLoading(false);
         XLog.d("onProductsResult    = ");
         if (result != null) {
-            List<ProductListBean.DataBean> data = result.getData().getRecords();
+            List<ProductList.DataBean> data = result.getRecords();
             if (data != null) {
-                ProductListBean.DataBean bean = data.get(0);
+                ProductList.DataBean bean = data.get(0);
                 String shopName = bean.getShopName();
                 XLog.d("shopName   = " + shopName);
             }
@@ -245,7 +245,7 @@ public class MainActivity extends BaseAct  {
      * 根据店铺ID 获取 商品分类列表 的回调处方法
      * * @param result
      */
-    private void onCateGoryResult(CategoryBean result) {
+    private void onCateGoryResult(Category result) {
 //        showLoading(false);
         if (result != null) {
             categoryList = result.getData();
@@ -274,7 +274,7 @@ public class MainActivity extends BaseAct  {
             jsonArray.put(orderBean);
             json.put("productList", jsonArray);
             showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, OrderSussesBean.class, orderResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, OrderSusses.class, orderResult -> {
                 onconfirmOrderResult(orderResult);
             });
         } catch (Exception e) {
@@ -289,7 +289,7 @@ public class MainActivity extends BaseAct  {
      *
      * @param result
      */
-    private void onconfirmOrderResult(OrderSussesBean result) {
+    private void onconfirmOrderResult(OrderSusses result) {
         showLoading(false);
         if (result.getData() != null) {
             String orderNum = result.getData().getOrderNumber();
@@ -301,7 +301,7 @@ public class MainActivity extends BaseAct  {
         }
     }
 
-    private OrderSussesBean orderSussesBean;
+    private OrderSusses orderSussesBean;
     static String unionPayUrl = "http://192.168.10.193:8088/app/pay/payment?";
 
     private void orderUnionPay(String payCode) {

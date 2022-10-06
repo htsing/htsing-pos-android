@@ -9,25 +9,25 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.htsing.pos.R;
-import com.htsing.pos.bean.CategoryBean;
+import com.htsing.pos.bean.Category;
 
 import java.util.List;
 
 public class CategoryListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<CategoryBean.DataBean> list;
+    private List<Category.DataBean> list;
     private int mFlag;
     private int selectPosition = -1;
 
 
-    public CategoryListAdapter(Context context, List<CategoryBean.DataBean> lvBeans, int flag) {
+    public CategoryListAdapter(Context context, List<Category.DataBean> lvBeans, int flag) {
         this.mContext = context;
         this.list = lvBeans;
         this.mFlag = flag;
     }
 
-    public CategoryListAdapter(List<CategoryBean.DataBean> var1) {
+    public CategoryListAdapter(List<Category.DataBean> var1) {
         this.list = var1;
     }
 

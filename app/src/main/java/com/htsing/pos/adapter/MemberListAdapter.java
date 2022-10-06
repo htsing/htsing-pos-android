@@ -9,31 +9,31 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.htsing.pos.R;
-import com.htsing.pos.bean.HomeMemberInfoBean;
+import com.htsing.pos.bean.HomeMemberInfo;
 
 import java.util.List;
 
 public class MemberListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<HomeMemberInfoBean.DataBean> list;
+    private List<HomeMemberInfo.DataBean> list;
     private int mFlag;
     private int selectPosition = -1;
 
-    public List<HomeMemberInfoBean.DataBean> getList() {
+    public List<HomeMemberInfo.DataBean> getList() {
         return list;
     }
 
-    public MemberListAdapter(Context context, List<HomeMemberInfoBean.DataBean> lvBeans) {
+    public MemberListAdapter(Context context, List<HomeMemberInfo.DataBean> lvBeans) {
         this.mContext = context;
         this.list = lvBeans;
     }
 
-    public MemberListAdapter(List<HomeMemberInfoBean.DataBean> var1) {
+    public MemberListAdapter(List<HomeMemberInfo.DataBean> var1) {
         this.list = var1;
     }
 
-    public void setDataList(List<HomeMemberInfoBean.DataBean> dataList) {
+    public void setDataList(List<HomeMemberInfo.DataBean> dataList) {
         this.list = dataList;
         notifyDataSetChanged();
     }

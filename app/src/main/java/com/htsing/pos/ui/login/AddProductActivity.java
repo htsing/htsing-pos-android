@@ -17,8 +17,8 @@ import com.elvishew.xlog.XLog;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
-import com.htsing.pos.bean.CategoryBean;
-import com.htsing.pos.bean.AddProductBean;
+import com.htsing.pos.bean.Category;
+import com.htsing.pos.bean.AddProduct;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.utils.PreferencesUtil;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
@@ -115,7 +115,7 @@ public class AddProductActivity extends BaseAct {
     ImageView iv_add_product_pic;
 
     //获取的 商品分类列表
-    private List<CategoryBean.DataBean> categoryList;
+    private List<Category.DataBean> categoryList;
     private List<String> stringList;
     private List<String> unitList;
     private int categoryId;
@@ -372,7 +372,7 @@ public class AddProductActivity extends BaseAct {
 
             }
             showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, AddProductBean.class, resultBean -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, AddProduct.class, resultBean -> {
                 onProductResult(resultBean);
             });
         } catch (Exception e) {
@@ -405,7 +405,7 @@ public class AddProductActivity extends BaseAct {
             json.put("shopId", Constant.getShopId());
             json.put("userId", Constant.getUserId());
             showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, AddProductBean.class, resultBean -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, AddProduct.class, resultBean -> {
                 onProductResult(resultBean);
             });
         } catch (Exception e) {
@@ -413,7 +413,7 @@ public class AddProductActivity extends BaseAct {
         }
     }
 
-    private void onProductResult(AddProductBean resultBean) {
+    private void onProductResult(AddProduct resultBean) {
         showLoading(false);
         if (resultBean == null) {
             return;
@@ -494,7 +494,7 @@ public class AddProductActivity extends BaseAct {
             JSONObject json = new JSONObject();
             json.put("shopId", "1");
 //            showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, CategoryBean.class, result -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, Category.class, result -> {
                 onCateGoryResult(result);
             });
         } catch (Exception e) {
@@ -534,7 +534,7 @@ public class AddProductActivity extends BaseAct {
      * 根据店铺ID 获取 商品分类列表 的回调处方法
      * * @param result
      */
-    private void onCateGoryResult(CategoryBean result) {
+    private void onCateGoryResult(Category result) {
         categoryList = result.getData();
 //        showLoading(false);
         if (categoryList != null) {

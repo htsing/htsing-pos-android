@@ -19,7 +19,7 @@ import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
-import com.htsing.pos.bean.HomeMemberInfoBean;
+import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.ui.login.PosMainActivity;
 import com.htsing.pos.utils.CommonViewUtils;
@@ -149,7 +149,7 @@ public class HomeAddMemberFragment extends HomeBaseFragment {
             json.put("sex", sex);
             json.put("birthDate", birthDate);
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDNEWMEMBER, HomeMemberInfoBean.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDNEWMEMBER, HomeMemberInfo.class, result -> {
                 onNewMemberResult(result);
             });
         } catch (Exception e) {
@@ -158,7 +158,7 @@ public class HomeAddMemberFragment extends HomeBaseFragment {
         }
     }
 
-    private void onNewMemberResult(HomeMemberInfoBean result) {
+    private void onNewMemberResult(HomeMemberInfo result) {
         mBact.showLoading(false);
         XLog.d(result);
         if (result.getData() == null) {

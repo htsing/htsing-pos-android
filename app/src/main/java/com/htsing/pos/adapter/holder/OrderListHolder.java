@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.trecyclerview.holder.BaseHolder;
 import com.htsing.pos.R;
-import com.htsing.pos.bean.ShopOrderDetailBean;
+import com.htsing.pos.bean.ShopOrderDetail;
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
@@ -23,7 +23,7 @@ import android.content.Context;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.fragment.OrderListFragment;
 
-public class OrderListHolder extends BaseListVH<ShopOrderDetailBean.DataBean.RecordsBean> {
+public class OrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.RecordsBean> {
 
 
     private ListViewItemClickInterface itemClickInterface;
@@ -52,7 +52,7 @@ public class OrderListHolder extends BaseListVH<ShopOrderDetailBean.DataBean.Rec
 
 
     @Override
-    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetailBean.DataBean.RecordsBean item) {
+    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetail.DataBean.RecordsBean item) {
         if (item == null) {
             return;
         }
@@ -168,6 +168,6 @@ public class OrderListHolder extends BaseListVH<ShopOrderDetailBean.DataBean.Rec
     }
 
     public interface ListViewItemClickInterface {
-        void onHandleItemClick(ShopOrderDetailBean.DataBean.RecordsBean item);
+        void onHandleItemClick(ShopOrderDetail.DataBean.RecordsBean item);
     }
 }

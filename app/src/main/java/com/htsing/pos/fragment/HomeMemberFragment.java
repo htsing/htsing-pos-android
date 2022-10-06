@@ -14,7 +14,7 @@ import com.htsing.pos.R;
 import com.htsing.pos.adapter.MemberListAdapter;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
-import com.htsing.pos.bean.HomeMemberInfoBean;
+import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.ui.login.PosMainActivity;
 import com.htsing.pos.utils.CommonViewUtils;
@@ -64,7 +64,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
 
     private PosMainActivity posMainActivity;
 
-    private List<HomeMemberInfoBean.DataBean> list;
+    private List<HomeMemberInfo.DataBean> list;
     private MemberListAdapter memberListAdapter;
 
 
@@ -233,7 +233,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
             String stringUrl = buffer.toString();
             XLog.d(stringUrl);
 
-            easyPost(json, stringUrl, HomeMemberInfoBean.class, result -> {
+            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -243,7 +243,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
 
     }
 
-    private void onMemberResult(HomeMemberInfoBean relust) {
+    private void onMemberResult(HomeMemberInfo relust) {
 //        if (relust.getData() == null) {
 //            showToast("会员信息为空");
 //            layout_member_null.setVisibility(View.VISIBLE);

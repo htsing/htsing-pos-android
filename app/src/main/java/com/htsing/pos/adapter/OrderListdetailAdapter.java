@@ -9,12 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.htsing.pos.bean.ShopOrderDetailBean;
-import com.htsing.pos.bean.ShopOrderDetailBean.DataBean.RecordsBean.OrderItemsBean;
+import com.htsing.pos.bean.ShopOrderDetail;
+import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean;
 
 import com.bumptech.glide.Glide;
 import com.htsing.pos.R;
-import com.htsing.pos.bean.HomeMemberInfoBean;
+import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.callback.ModifyCountInterface;
 import com.htsing.pos.utils.BigDecimalUtils;
 
@@ -24,24 +24,24 @@ public class OrderListdetailAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<OrderItemsBean> list;//子订单的list 数量
-    private ShopOrderDetailBean.DataBean.RecordsBean recordsBean; //订单对象
+    private ShopOrderDetail.DataBean.RecordsBean recordsBean; //订单对象
     private int mFlag;
     private ModifyCountInterface modifyCountInterface;
 
     private boolean isMember = false;
-    private HomeMemberInfoBean.DataBean memberInfoBean;
+    private HomeMemberInfo.DataBean memberInfoBean;
 
     private int productNum = 0;
     private int preProductNum = 0;
 
-    public OrderListdetailAdapter(Context context, ShopOrderDetailBean.DataBean.RecordsBean orderlist, int flag) {
+    public OrderListdetailAdapter(Context context, ShopOrderDetail.DataBean.RecordsBean orderlist, int flag) {
         this.mContext = context;
         this.list = orderlist.getOrderItems();
         this.mFlag = flag;
     }
 
 
-    public void setMember(HomeMemberInfoBean.DataBean memberInfoBean) {
+    public void setMember(HomeMemberInfo.DataBean memberInfoBean) {
         this.memberInfoBean = memberInfoBean;
         notifyDataSetChanged();
     }

@@ -11,28 +11,28 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.htsing.pos.R;
-import com.htsing.pos.bean.ProductListBean;
+import com.htsing.pos.bean.ProductList;
 
 import java.util.List;
 
 public class GoodsAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<ProductListBean.DataBean> list;
+    private List<ProductList.DataBean> list;
     private int mFlag;
     private int selectPosition = -1;
 
-    public GoodsAdapter(Context context, List<ProductListBean.DataBean> gvBeans, int flag) {
+    public GoodsAdapter(Context context, List<ProductList.DataBean> gvBeans, int flag) {
         this.mContext = context;
         this.list = gvBeans;
         this.mFlag = flag;
     }
 
-    public GoodsAdapter(List<ProductListBean.DataBean> var1) {
+    public GoodsAdapter(List<ProductList.DataBean> var1) {
         this.list = var1;
     }
 
-    public void setNewData(List<ProductListBean.DataBean> list) {
+    public void setNewData(List<ProductList.DataBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }

@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.elvishew.xlog.XLog;
 import com.htsing.pos.App;
-import com.htsing.pos.bean.LoginBean;
+import com.htsing.pos.bean.Login;
 import com.htsing.pos.utils.PreferencesUtil;
 
 /**
@@ -47,7 +47,7 @@ public class Constant {
     public static int residentBasicId = 0;
     public static boolean isTeacher = true; // 区分教务还是教师
     public static final String[] token11 = new String[1];
-    public static LoginBean.DataBean loginBean = null;
+    public static Login.DataBean loginBean = null;
     // request参数
     public static final int REQ_QR_CODE = 11002; // // 打开扫描界面请求码
     public static final int REQ_PERM_CAMERA = 11003; // 打开摄像头

@@ -13,10 +13,10 @@ import com.htsing.pos.R;
 import com.htsing.pos.adapter.CardListAdapter;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
-import com.htsing.pos.bean.HomeMemberInfoBean;
+import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.bean.MenusBean;
-import com.htsing.pos.bean.ProductListBean;
-import com.htsing.pos.bean.ShopOrderDetailBean;
+import com.htsing.pos.bean.ProductList;
+import com.htsing.pos.bean.ShopOrderDetail;
 import com.htsing.pos.bean.msg.PayEventBean;
 import com.htsing.pos.callback.ModifyCountInterface;
 import com.htsing.pos.constant.Constant;
@@ -54,7 +54,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     //购物车列表里面的listView适配器
     private CardListAdapter cardListAdapter;
     //首次加载获取的商品列表
-    private List<ProductListBean.DataBean> cardList;
+    private List<ProductList.DataBean> cardList;
     private BaseAct mBact;
     private PosMainActivity posMainActivity;
     //会员登录以后，显示会员自己余额
@@ -105,13 +105,13 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     private DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     //存储会员信息的对象
-    private HomeMemberInfoBean.DataBean memberInfoBean;
+    private HomeMemberInfo.DataBean memberInfoBean;
     //购物车商品商品数量
     int productNum = 0;
     //购物车商品总价
     double totalPrice = 0.00;
     //挂单功能，临时存储的购物车列表数据
-    private Map<String, List<ProductListBean.DataBean>> limitCartDataMap;
+    private Map<String, List<ProductList.DataBean>> limitCartDataMap;
 
     @Override
     public int getLayout() {
@@ -149,7 +149,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         cartListView.setAdapter(cardListAdapter);
         cardListAdapter.setModifyCountInterface(this);
 
-        limitCartDataMap = new HashMap<String, List<ProductListBean.DataBean>>();
+        limitCartDataMap = new HashMap<String, List<ProductList.DataBean>>();
         //挂单按钮
         CommonViewUtils.setOnClick(tv_home_cart_temp_order, view -> {
 
@@ -181,7 +181,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         if (eventBean.getType() == BaseEventBean.TYPE_GOTO_MEMBER_FRAGMENT ||
                 eventBean.getType() == BaseEventBean.TYPE_GOTO_ADD_MEMBER_FRAGMENT) {
 
-            memberInfoBean = (HomeMemberInfoBean.DataBean) eventBean.getValue();
+            memberInfoBean = (HomeMemberInfo.DataBean) eventBean.getValue();
 
             if (memberInfoBean != null) {
                 //先隐藏其他的View
@@ -231,7 +231,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
         } else if (eventBean.getType() == BaseEventBean.TYPE_GRIDVIEW_ITEM_CLICK) {
 
-            ProductListBean.DataBean dataBean = (ProductListBean.DataBean) eventBean.getValue();
+            ProductList.DataBean dataBean = (ProductList.DataBean) eventBean.getValue();
             if (dataBean == null) {
                 return;
             }
@@ -277,7 +277,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             getMemberData();
         } else if (eventBean.getType() == BaseEventBean.TEMP_ORDER_DATA) {
             //添加挂单中的产品到购物车
-            ShopOrderDetailBean.DataBean.RecordsBean item = (ShopOrderDetailBean.DataBean.RecordsBean) eventBean.getValue();
+            ShopOrderDetail.DataBean.RecordsBean item = (ShopOrderDetail.DataBean.RecordsBean) eventBean.getValue();
             getTempOrderListData(item);
 
             //从EventBus消息中取出 订单和会员对象
@@ -324,9 +324,9 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         totalPrice = 0.0;
         double itemTotalPrice = 0.0;
 
-        List<ProductListBean.DataBean> list = cardListAdapter.getList();
+        List<ProductList.DataBean> list = cardListAdapter.getList();
 
-        for (ProductListBean.DataBean bean : list) {
+        for (ProductList.DataBean bean : list) {
 //            totalPrice += BigDecimalUtils.mul(bean.getPrice(), bean.getOrderNum(), 1);
             productNum += bean.getOrderNum();
 
@@ -370,7 +370,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      * 提交订单，在服务端生成订单号
      */
     private void confirmOrder() {
-        List<ProductListBean.DataBean> list = cardListAdapter.getList();
+        List<ProductList.DataBean> list = cardListAdapter.getList();
         if (list.size() == 0) {
             showToast("购物车为空");
             return;
@@ -391,7 +391,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
             if (list != null) {
 
-                for (ProductListBean.DataBean bean : list) {
+                for (ProductList.DataBean bean : list) {
                     XLog.d("getOrderNum = " + bean.getOrderNum());
 
                     JSONObject orderBean = new JSONObject();
@@ -402,7 +402,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             }
             json.put("productList", jsonArray);
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, ShopOrderDetailBean.class, orderResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, ShopOrderDetail.class, orderResult -> {
                 onconfirmOrderResult(orderResult);
             });
         } catch (Exception e) {
@@ -416,7 +416,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      *
      * @param result
      */
-    private void onconfirmOrderResult(ShopOrderDetailBean result) {
+    private void onconfirmOrderResult(ShopOrderDetail result) {
         mBact.showLoading(false);
 
         if (result.getData() == null) {
@@ -424,7 +424,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             return;
         }
 
-        if (result.getResultCode() == 200) {
+        if (result.getCode() == 200) {
 //            double actualTotal = result.getData().getRecords().get(0).getActualTotal();
 //            String orderNum = result.getData().getRecords().get(0).getOrderNumber();
 
@@ -442,7 +442,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      * 提交订单，在服务端生成订单号
      */
     private void confirmTempOrder() {
-        List<ProductListBean.DataBean> list = cardListAdapter.getList();
+        List<ProductList.DataBean> list = cardListAdapter.getList();
         if (list.size() == 0) {
             showToast("购物车为空");
             return;
@@ -464,7 +464,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
             if (list != null) {
 
-                for (ProductListBean.DataBean bean : list) {
+                for (ProductList.DataBean bean : list) {
                     XLog.d("getOrderNum = " + bean.getOrderNum());
 
                     JSONObject orderBean = new JSONObject();
@@ -475,7 +475,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             }
             json.put("productList", jsonArray);
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, ShopOrderDetailBean.class, orderResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, ShopOrderDetail.class, orderResult -> {
                 onconfirmTempOrderResult(orderResult);
             });
         } catch (Exception e) {
@@ -489,7 +489,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      *
      * @param result
      */
-    private void onconfirmTempOrderResult(ShopOrderDetailBean result) {
+    private void onconfirmTempOrderResult(ShopOrderDetail result) {
         mBact.showLoading(false);
 
         if (result.getData() == null) {
@@ -497,7 +497,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             return;
         }
 
-        if (result.getResultCode() == 200) {
+        if (result.getCode() == 200) {
 
             //发消息给购物车，清空购物车
             BaseEventBean bean = new BaseEventBean(BaseEventBean.PAY_SUSSESS_CLEAR_CRAT);
@@ -521,7 +521,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
             String stringUrl = buffer.toString();
             mBact.showLoading();
-            easyPost(json, stringUrl, HomeMemberInfoBean.class, result -> {
+            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -548,7 +548,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
             String stringUrl = buffer.toString();
             mBact.showLoading();
-            easyPost(json, stringUrl, HomeMemberInfoBean.class, result -> {
+            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -558,7 +558,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
     }
 
-    private void onMemberResult(HomeMemberInfoBean relust) {
+    private void onMemberResult(HomeMemberInfo relust) {
         if (relust.getData() == null) {
             showToast("会员信息为空");
             return;
@@ -576,8 +576,8 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      * @param dataBean
      * @return
      */
-    private ProductListBean.DataBean getNewDataBean(ProductListBean.DataBean dataBean) {
-        ProductListBean.DataBean bean = new ProductListBean.DataBean();
+    private ProductList.DataBean getNewDataBean(ProductList.DataBean dataBean) {
+        ProductList.DataBean bean = new ProductList.DataBean();
         bean.setProdId(dataBean.getProdId());
         bean.setOrderNum(1);
         bean.setShopId(dataBean.getShopId());
@@ -610,7 +610,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
     private List<MenusBean> menus = new ArrayList<>();
 
-    private void formatGoods(ProductListBean.DataBean gvBeans) {
+    private void formatGoods(ProductList.DataBean gvBeans) {
         MenusBean bean = new MenusBean();
         bean.setId("" + (menus.size() + 1));
         bean.setMoney(gvBeans.getPrictRetail() + "");
@@ -682,7 +682,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     //ListView购物车点击事件的回调函数
     @Override
     public void doIncrease(int position, View showCountView, boolean isChecked) {
-        ProductListBean.DataBean bean = cardListAdapter.getList().get(position);
+        ProductList.DataBean bean = cardListAdapter.getList().get(position);
         int currentCount = bean.getOrderNum();
         currentCount++;
         bean.setOrderNum(currentCount);
@@ -700,7 +700,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
     @Override
     public void doDecrease(int position, View showCountView, boolean isChecked) {
-        ProductListBean.DataBean bean = cardListAdapter.getList().get(position);
+        ProductList.DataBean bean = cardListAdapter.getList().get(position);
         int currentCount = bean.getOrderNum();
         if (currentCount == 1) {
             return;
@@ -734,15 +734,15 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      *
      * @param item
      */
-    private void getTempOrderListData(ShopOrderDetailBean.DataBean.RecordsBean item) {
+    private void getTempOrderListData(ShopOrderDetail.DataBean.RecordsBean item) {
 
-        for (ShopOrderDetailBean.DataBean.RecordsBean.OrderItemsBean itemsBean : item.getOrderItems()) {
+        for (ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean itemsBean : item.getOrderItems()) {
             cardListAdapter.setDataBean(getNewTempDataBean(itemsBean));
         }
     }
 
-    private ProductListBean.DataBean getNewTempDataBean(ShopOrderDetailBean.DataBean.RecordsBean.OrderItemsBean dataBean) {
-        ProductListBean.DataBean bean = new ProductListBean.DataBean();
+    private ProductList.DataBean getNewTempDataBean(ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean dataBean) {
+        ProductList.DataBean bean = new ProductList.DataBean();
         bean.setProdId(dataBean.getProdId());
         bean.setOrderNum(1);
         bean.setShopId(dataBean.getShopId());
@@ -780,17 +780,17 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     //hashMap的使用
     private void tempGetOrder() {
 
-        List<ProductListBean.DataBean> tempList = Arrays.asList(new ProductListBean.DataBean[(cardListAdapter.getList().size())]);
+        List<ProductList.DataBean> tempList = Arrays.asList(new ProductList.DataBean[(cardListAdapter.getList().size())]);
 
         Collections.copy(tempList, cardListAdapter.getList());
         //这是由Arrays.asList() 返回的市Arrays的内部类ArrayList， 而不是java.util.ArrayList
-        List<ProductListBean.DataBean> arrtempList = new ArrayList<>(tempList);
+        List<ProductList.DataBean> arrtempList = new ArrayList<>(tempList);
         limitCartDataMap.put("temp", arrtempList);
 
         cardListAdapter.getList().removeAll(cardListAdapter.getList());
         cardListAdapter.notifyDataSetChanged();
 
-        List<ProductListBean.DataBean> list = limitCartDataMap.get("temp");
+        List<ProductList.DataBean> list = limitCartDataMap.get("temp");
 
 
         if (list != null & list.size() > 0) {

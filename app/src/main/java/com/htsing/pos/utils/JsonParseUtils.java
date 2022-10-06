@@ -9,13 +9,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.constant.Constant;
-import com.htsing.pos.easyhttp.CommonResultBean;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.bean.msg.TokenEventBean;
 import com.htsing.pos.mvp.callback.OnRequestSuccess;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.callback.SimpleCallBack;
 import com.zhouyou.http.exception.ApiException;
-import com.zhouyou.http.model.HttpParams;
 import com.zhouyou.http.request.GetRequest;
 import com.zhouyou.http.request.PostRequest;
 import com.pgyer.pgyersdk.PgyerSDKManager;
@@ -23,14 +22,9 @@ import com.pgyer.pgyersdk.PgyerSDKManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 
 /**
  * Created by 曹荣冠
@@ -216,16 +210,16 @@ public class JsonParseUtils {
 
     public static <T> void commonResult(String s, Class<T> cls, OnRequestSuccess<T> listener) {
         if (TextUtils.isEmpty(s)) listener.onResult(null);  //当s为空，则回调空，因为图片不一定必须加载成功。
-        CommonResultBean baseBean = parse(s, CommonResultBean.class);
+        CommonResult baseBean = parse(s, CommonResult.class);
         if (baseBean == null) return;
-        if (baseBean.getResultCode() == 0) {
+        if (baseBean.getCode() == 0) {
             T bean = parse(s, cls);
             if (listener != null) listener.onResult(bean);
-        } else if (baseBean.getResultCode() == 200) {
+        } else if (baseBean.getCode() == 200) {
             T bean = parse(s, cls);
             if (listener != null) listener.onResult(bean);
         } else {
-            CommonViewUtils.showToast(baseBean.getResultMsg());
+            CommonViewUtils.showToast(baseBean.getMessage());
         }
     }
 

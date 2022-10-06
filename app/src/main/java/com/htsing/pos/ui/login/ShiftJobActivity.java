@@ -10,7 +10,7 @@ import com.elvishew.xlog.XLog;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
-import com.htsing.pos.bean.RecordListBean;
+import com.htsing.pos.bean.RecordList;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.webView.WebAppInterface;
 
@@ -139,7 +139,7 @@ public class ShiftJobActivity extends BaseAct {
             json.put("startTime", "");
             json.put("current", 1);
 
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.SELECTDEPOSITMONEYRECORD, RecordListBean.class, resultBean -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.SELECTDEPOSITMONEYRECORD, RecordList.class, resultBean -> {
                 onRecordResult(resultBean);
             });
         } catch (Exception e) {
@@ -148,7 +148,7 @@ public class ShiftJobActivity extends BaseAct {
         }
     }
 
-    private void onRecordResult(RecordListBean relult) {
+    private void onRecordResult(RecordList relult) {
         XLog.d(relult);
         if (relult.getData() == null) {
             showToast("没有数据哟");

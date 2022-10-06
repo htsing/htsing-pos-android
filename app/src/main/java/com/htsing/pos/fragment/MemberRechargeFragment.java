@@ -11,8 +11,8 @@ import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
-import com.htsing.pos.bean.HomeMemberInfoBean;
-import com.htsing.pos.bean.RechargeBean;
+import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.bean.Recharge;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.dialog.PaySussessDialog;
 import com.htsing.pos.dialog.RechargeTipsDialog;
@@ -82,9 +82,9 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
     private PosMainActivity posMainActivity;
     private BaseAct mBact;
     //存储会员对象
-    private HomeMemberInfoBean.DataBean memberInfoBean;
+    private HomeMemberInfo.DataBean memberInfoBean;
     //记录 生产的充值订单对象
-    private RechargeBean rechargeBean;
+    private Recharge rechargeBean;
 
     private RechargeTipsDialog dialog;
 
@@ -228,7 +228,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
             json.put("mobile", memberInfoBean.getUserMobile());
             json.put("cid", PreferencesUtil.getString(mBact, Constant.SP_CID));
             mBact.showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEY, RechargeBean.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEY, Recharge.class, result -> {
                 onDepositMoney(result);
             });
         } catch (Exception e) {
@@ -243,7 +243,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
      *
      * @param result
      */
-    private void onDepositMoney(RechargeBean result) {
+    private void onDepositMoney(Recharge result) {
         mBact.showLoading(false);
         if (result == null) {
             showToast("订单生成失败");
@@ -251,7 +251,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
         }
         this.rechargeBean = result;
 
-        if (result.getResultCode() == 200) {
+        if (result.getCode() == 200) {
             depositMoneyByCash(result);
         }
     }
@@ -260,12 +260,12 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
      * 现金充值
      * 充值接口
      */
-    private void depositMoneyByCash(RechargeBean databean) {
+    private void depositMoneyByCash(Recharge databean) {
         try {
             JSONObject json = new JSONObject();
             json.put("orderNumber", databean.getData());
             mBact.showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYCASH, HomeMemberInfoBean.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYCASH, HomeMemberInfo.class, result -> {
                 onDepositMoneyByCash(result);
             });
         } catch (Exception e) {
@@ -279,7 +279,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
      *
      * @param result
      */
-    private void onDepositMoneyByCode(HomeMemberInfoBean result) {
+    private void onDepositMoneyByCode(HomeMemberInfo result) {
         mBact.showLoading(false);
 
         if (result == null) {
@@ -327,7 +327,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
      *
      * @param result
      */
-    private void onDepositMoneyByCash(HomeMemberInfoBean result) {
+    private void onDepositMoneyByCash(HomeMemberInfo result) {
         mBact.showLoading(false);
 
         if (result != null) {
@@ -414,7 +414,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
             json.put("mobile", memberInfoBean.getUserMobile());
             json.put("cid", PreferencesUtil.getString(mBact, Constant.SP_CID));
             mBact.showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEY, RechargeBean.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEY, Recharge.class, result -> {
                 onDepositMoneyByCode(result);
             });
         } catch (Exception e) {
@@ -434,7 +434,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
             json.put("orderNumber", rechargeBean.getData());
             json.put("payCode", code);
             mBact.showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYUMS, HomeMemberInfoBean.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYUMS, HomeMemberInfo.class, result -> {
                 onDepositMoneyByCode(result);
                 //扫码 充值以后，收到服务端请求以后，在更新会员行
             });
@@ -450,8 +450,8 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
      *
      * @param result
      */
-    private void onDepositMoneyByCode(RechargeBean result) {
-        if (result.getResultCode() == 200) {
+    private void onDepositMoneyByCode(Recharge result) {
+        if (result.getCode() == 200) {
             this.rechargeBean = result;
             tv_code_recgarge_order_tips.setVisibility(View.VISIBLE);
             tv_code_recgarge_order_num.setVisibility(View.VISIBLE);
@@ -471,7 +471,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleEvent(BaseEventBean messageEvent) {
         if (messageEvent.getType() == BaseEventBean.RECHARGE_MEMBER_FRAGMENT) {
-            this.memberInfoBean = (HomeMemberInfoBean.DataBean) messageEvent.getValue();
+            this.memberInfoBean = (HomeMemberInfo.DataBean) messageEvent.getValue();
         }
     }
 

@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.htsing.pos.R;
-import com.htsing.pos.bean.HomeMemberInfoBean;
-import com.htsing.pos.bean.ShopOrderDetailBean.DataBean.RecordsBean;
-import com.htsing.pos.bean.ShopOrderDetailBean.DataBean.RecordsBean.OrderItemsBean;
+import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
+import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean;
 import com.htsing.pos.callback.ModifyCountInterface;
 import com.htsing.pos.utils.BigDecimalUtils;
 
@@ -28,7 +28,7 @@ public class TempOrderListdetailAdapter extends BaseAdapter {
     private ModifyCountInterface modifyCountInterface;
 
     private boolean isMember = false;
-    private HomeMemberInfoBean.DataBean memberInfoBean;
+    private HomeMemberInfo.DataBean memberInfoBean;
 
     private int productNum = 0;
     private int preProductNum = 0;
@@ -40,7 +40,7 @@ public class TempOrderListdetailAdapter extends BaseAdapter {
     }
 
 
-    public void setMember(HomeMemberInfoBean.DataBean memberInfoBean) {
+    public void setMember(HomeMemberInfo.DataBean memberInfoBean) {
         this.memberInfoBean = memberInfoBean;
         notifyDataSetChanged();
     }

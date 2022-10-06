@@ -1,11 +1,11 @@
 package com.htsing.pos.bean;
 
 import com.google.gson.annotations.SerializedName;
-import com.htsing.pos.easyhttp.CommonResultBean;
+import com.htsing.pos.easyhttp.CommonResult;
 
 import java.io.Serializable;
 
-public class ShopInfobean extends CommonResultBean {
+public class ShopInfobean extends CommonResult {
 
 
     /**

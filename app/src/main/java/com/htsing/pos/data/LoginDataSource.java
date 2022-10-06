@@ -1,6 +1,7 @@
 package com.htsing.pos.data;
 
 import com.htsing.pos.data.model.LoggedInUser;
+import com.htsing.pos.easyhttp.CommonResult;
 
 import java.io.IOException;
 
@@ -22,7 +23,6 @@ public class LoginDataSource {
             return new Result.Error(new IOException("Error logging in", e));
         }
     }
-
     public void logout() {
         // TODO: revoke authentication
     }

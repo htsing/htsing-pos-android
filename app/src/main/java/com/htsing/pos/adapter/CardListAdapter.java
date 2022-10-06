@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.elvishew.xlog.XLog;
 import com.htsing.pos.R;
-import com.htsing.pos.bean.HomeMemberInfoBean;
-import com.htsing.pos.bean.ProductListBean;
+import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.bean.ProductList;
 import com.htsing.pos.callback.ModifyCountInterface;
 import com.htsing.pos.utils.BigDecimalUtils;
 
@@ -23,37 +23,37 @@ import java.util.List;
 public class CardListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<ProductListBean.DataBean> list;
+    private List<ProductList.DataBean> list;
     private int mFlag;
     private ModifyCountInterface modifyCountInterface;
 
     private boolean isMember = false;
-    private HomeMemberInfoBean.DataBean memberInfoBean;
+    private HomeMemberInfo.DataBean memberInfoBean;
 
     private int productNum = 0;
     private int preProductNum = 0;
 
-    public CardListAdapter(Context context, List<ProductListBean.DataBean> lvBeans, int flag) {
+    public CardListAdapter(Context context, List<ProductList.DataBean> lvBeans, int flag) {
         this.mContext = context;
         this.list = lvBeans;
         this.mFlag = flag;
     }
 
 
-    public void setMember(HomeMemberInfoBean.DataBean memberInfoBean) {
+    public void setMember(HomeMemberInfo.DataBean memberInfoBean) {
         this.memberInfoBean = memberInfoBean;
         notifyDataSetChanged();
     }
 
-    public CardListAdapter(List<ProductListBean.DataBean> var1) {
+    public CardListAdapter(List<ProductList.DataBean> var1) {
         this.list = var1;
     }
 
-    public void setNewData(List<ProductListBean.DataBean> list) {
+    public void setNewData(List<ProductList.DataBean> list) {
         this.list = list;
     }
 
-    public void setDataBean(ProductListBean.DataBean dataBean) {
+    public void setDataBean(ProductList.DataBean dataBean) {
         if (list != null) {
             list.add(dataBean);
             notifyDataSetChanged();
@@ -68,11 +68,11 @@ public class CardListAdapter extends BaseAdapter {
         this.modifyCountInterface = modifyCountInterface;
     }
 
-    public List<ProductListBean.DataBean> getList() {
+    public List<ProductList.DataBean> getList() {
         return list;
     }
 
-    public void setList(List<ProductListBean.DataBean> list) {
+    public void setList(List<ProductList.DataBean> list) {
         this.list = list;
     }
 

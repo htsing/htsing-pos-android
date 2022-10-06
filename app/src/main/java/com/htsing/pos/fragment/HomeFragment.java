@@ -19,9 +19,9 @@ import com.htsing.pos.adapter.CategoryListAdapter;
 import com.htsing.pos.adapter.GoodsAdapter;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
-import com.htsing.pos.bean.CategoryBean;
-import com.htsing.pos.bean.OrderSussesBean;
-import com.htsing.pos.bean.ProductListBean;
+import com.htsing.pos.bean.Category;
+import com.htsing.pos.bean.OrderSusses;
+import com.htsing.pos.bean.ProductList;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.ui.login.PosMainActivity;
@@ -53,9 +53,9 @@ public class HomeFragment extends HomeBaseFragment {
     //购物车列表里面的listView适配器
     private CardListAdapter cardListAdapter;
     //首次加载获取的商品列表
-    private List<ProductListBean.DataBean> cardList;
+    private List<ProductList.DataBean> cardList;
     //首次加载获取的商品分类
-    private List<CategoryBean.DataBean> categoryList;
+    private List<Category.DataBean> categoryList;
 
     //首次获取商品列表的GridView
     @BindView(R.id.gv_shop_list)
@@ -166,7 +166,7 @@ public class HomeFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("shopId", Constant.getShopId());
             mBact.showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductListBean.class, stringResult -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductList.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -179,13 +179,13 @@ public class HomeFragment extends HomeBaseFragment {
      *
      * @param result
      */
-    private void onProductsResult(ProductListBean result) {
+    private void onProductsResult(ProductList result) {
         XLog.d("onProductsResult    = ");
         mBact.showLoading(false);
         if (result != null) {
-            List<ProductListBean.DataBean> data = result.getData().getRecords();
+            List<ProductList.DataBean> data = result.getRecords();
             if (data != null) {
-                ProductListBean.DataBean bean = data.get(0);
+                ProductList.DataBean bean = data.get(0);
                 String shopName = bean.getShopName();
                 XLog.d("shopName   = " + shopName);
 
@@ -197,7 +197,7 @@ public class HomeFragment extends HomeBaseFragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        ProductListBean.DataBean bean1 = data.get(position);
+                        ProductList.DataBean bean1 = data.get(position);
                         cardList.add(bean1);
                         cardListAdapter = new CardListAdapter(mBact, cardList, 1);
                         cartListView.setAdapter(cardListAdapter);
@@ -218,7 +218,7 @@ public class HomeFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("shopId", "1");
 //            showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, CategoryBean.class, result -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, Category.class, result -> {
                 onCateGoryResult(result);
             });
         } catch (Exception e) {
@@ -231,7 +231,7 @@ public class HomeFragment extends HomeBaseFragment {
      * 根据店铺ID 获取 商品分类列表 的回调处方法
      * * @param result
      */
-    private void onCateGoryResult(CategoryBean result) {
+    private void onCateGoryResult(Category result) {
 //        showLoading(false);
         if (result != null) {
             categoryList = result.getData();
@@ -259,7 +259,7 @@ public class HomeFragment extends HomeBaseFragment {
             json.put("shopId", Constant.getShopId());
             json.put("categoryId", categoryId);
             mBact.showLoading();
-            easyGet(json, getProductByShopIdUrl, ProductListBean.class, stringResult -> {
+            easyGet(json, getProductByShopIdUrl, ProductList.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -269,7 +269,7 @@ public class HomeFragment extends HomeBaseFragment {
 
     private void confirmOrder() {
 
-        List<ProductListBean.DataBean> list = cardListAdapter.getList();
+        List<ProductList.DataBean> list = cardListAdapter.getList();
 
         try {
 
@@ -279,7 +279,7 @@ public class HomeFragment extends HomeBaseFragment {
 
             if (list != null) {
 
-                for (ProductListBean.DataBean bean : list) {
+                for (ProductList.DataBean bean : list) {
 //                    ConfirmOrderBean.OrderEntity orderEntity = comfirmOrderList.get(i);
                     XLog.d("getOrderNum = " + bean.getOrderNum());
 
@@ -293,7 +293,7 @@ public class HomeFragment extends HomeBaseFragment {
             }
             json.put("productList", jsonArray);
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, OrderSussesBean.class, orderResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, OrderSusses.class, orderResult -> {
                 onconfirmOrderResult(orderResult);
             });
         } catch (Exception e) {
@@ -307,7 +307,7 @@ public class HomeFragment extends HomeBaseFragment {
      *
      * @param result
      */
-    private void onconfirmOrderResult(OrderSussesBean result) {
+    private void onconfirmOrderResult(OrderSusses result) {
         mBact.showLoading(false);
         if (result.getData() != null) {
             String orderNum = result.getData().getOrderNumber();
@@ -329,7 +329,7 @@ public class HomeFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("barCode", "400");
             mBact.showLoading();
-            easyGet(json, getProductByBarCodeUrl, ProductListBean.class, result -> {
+            easyGet(json, getProductByBarCodeUrl, ProductList.class, result -> {
                 onProductResultBybarCode(result);
             });
         } catch (Exception e) {
@@ -337,20 +337,20 @@ public class HomeFragment extends HomeBaseFragment {
         }
     }
 
-    private void onProductResultBybarCode(ProductListBean result) {
+    private void onProductResultBybarCode(ProductList result) {
         mBact.showLoading(false);
         XLog.d("onProductsResult    = ");
         if (result != null) {
-            List<ProductListBean.DataBean> data = result.getData().getRecords();
+            List<ProductList.DataBean> data = result.getRecords();
             if (data != null) {
-                ProductListBean.DataBean bean = data.get(0);
+                ProductList.DataBean bean = data.get(0);
                 String shopName = bean.getShopName();
                 XLog.d("shopName   = " + shopName);
             }
         }
     }
 
-    private OrderSussesBean orderSussesBean;
+    private OrderSusses orderSussesBean;
     static String unionPayUrl = "http://192.168.10.193:8088/app/pay/payment?";
 
     private void orderUnionPay(String payCode) {

@@ -1,7 +1,5 @@
 package com.htsing.pos.bean;
 
-import com.htsing.pos.easyhttp.CommonResultBean;
-
 import java.io.Serializable;
 import java.util.List;
 

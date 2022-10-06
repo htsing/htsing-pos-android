@@ -27,11 +27,11 @@ import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
-import com.htsing.pos.bean.HomeMemberInfoBean;
-import com.htsing.pos.bean.RechargeBean;
-import com.htsing.pos.bean.RecordListBean;
+import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.bean.Recharge;
+import com.htsing.pos.bean.RecordList;
 import com.htsing.pos.bean.ShopInfobean;
-import com.htsing.pos.bean.ShopOrderDetailBean;
+import com.htsing.pos.bean.ShopOrderDetail;
 import com.htsing.pos.bean.UserInfoBean;
 import com.htsing.pos.bean.msg.TokenEventBean;
 import com.htsing.pos.constant.Constant;
@@ -48,7 +48,6 @@ import com.htsing.pos.presenter.PrinterPresenter;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.htsing.pos.utils.JsonParseUtils;
 import com.htsing.pos.utils.PreferencesUtil;
-import com.zhouyou.http.model.HttpParams;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -395,7 +394,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
      *
      * @param goods_data 订单数据
      */
-    public void paySuccessToPrinter(String goods_data, ShopOrderDetailBean.DataBean.RecordsBean orderBean) {
+    public void paySuccessToPrinter(String goods_data, ShopOrderDetail.DataBean.RecordsBean orderBean) {
         XLog.d(goods_data);
         if (orderBean != null)
             printerPresenter.setRelustOrder(orderBean);
@@ -409,7 +408,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
      *
      * @param goods_data 订单数据
      */
-    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetailBean.DataBean.RecordsBean orderBean, HomeMemberInfoBean.DataBean memberInfoBean) {
+    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo.DataBean memberInfoBean) {
         XLog.d(goods_data);
 
         printerPresenter.setRelustOrder(orderBean);
@@ -417,7 +416,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
         printerPresenter.print(goods_data, payMode);
     }
 
-    public void printMemberRechargeInfo(HomeMemberInfoBean.DataBean memberInfoBean, RechargeBean rechargeBean, int payMode) {
+    public void printMemberRechargeInfo(HomeMemberInfo.DataBean memberInfoBean, Recharge rechargeBean, int payMode) {
         printerPresenter.printMemberInfo(memberInfoBean, rechargeBean, payMode);
     }
 
@@ -639,7 +638,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
             json.put("startTime", "");
             json.put("current", 1);
 
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.SELECTDEPOSITMONEYRECORD, RecordListBean.class, resultBean -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.SELECTDEPOSITMONEYRECORD, RecordList.class, resultBean -> {
                 onRecordResult(resultBean);
             });
         } catch (Exception e) {
@@ -648,7 +647,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
         }
     }
 
-    private void onRecordResult(RecordListBean relult) {
+    private void onRecordResult(RecordList relult) {
         XLog.d(relult);
         if (relult.getData() == null) {
             showToast("没有数据哟");
