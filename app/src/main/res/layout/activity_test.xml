@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.login.TestActivity">
+    tools:context=".ui.login.PosMainActivity">
 
     <include layout="@layout/activity_main_title_layout" />
 

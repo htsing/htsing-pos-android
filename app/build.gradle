@@ -6,7 +6,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "com.xeld.cashier"
+        applicationId "com.htsing.pos"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 8
@@ -33,9 +33,9 @@ android {
     }
     signingConfigs {
         robert {
-            storePassword 'xeld2020'
-            keyPassword 'xeld2020'
-            storeFile file('keystore/cashier.jks')
+            storePassword 'pos2022'
+            keyPassword 'pos2022'
+            storeFile file('keystore/pos.jks')
             keyAlias 'key0'
         }
     }
@@ -139,4 +139,12 @@ dependencies {
     implementation 'com.zackratos.ultimatebarx:ultimatebarx:0.6.0'
 
     implementation 'com.blankj:utilcodex:1.30.1'
+
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    // Because RxAndroid releases are few and far between, it is recommended you also
+    // explicitly depend on RxJava's latest version for bug fixes and new features.
+    // (see https://github.com/ReactiveX/RxJava/releases for latest 3.x.x version)
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
+
+    implementation 'cn.hutool:hutool-all:5.8.8'
 }

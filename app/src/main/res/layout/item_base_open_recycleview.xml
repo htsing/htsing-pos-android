@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.xeld.cashier.view.refresh.SwipeRecyclerView
+    <com.htsing.pos.view.refresh.SwipeRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
