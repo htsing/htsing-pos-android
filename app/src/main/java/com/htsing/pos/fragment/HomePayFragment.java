@@ -15,13 +15,15 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
 import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
-import com.htsing.pos.ui.login.PosMainActivity;
+import com.htsing.pos.ui.login.PosActivity;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.xw.repo.XEditText;
 
@@ -63,7 +65,7 @@ public class HomePayFragment extends HomeBaseFragment {
     TextView tv_close_add_member_fragment;
 
     private BaseAct mBact;
-    private PosMainActivity posMainActivity;
+    private PosActivity posActivity;
 
     @Override
     public int getLayout() {
@@ -73,7 +75,7 @@ public class HomePayFragment extends HomeBaseFragment {
     @Override
     public void initView() {
         mBact = getAct();
-        posMainActivity = (PosMainActivity) getAct();
+        posActivity = (PosActivity) getAct();
 
         CommonViewUtils.getInputEnterResult(mBact, etViewMemberPhone);
         CommonViewUtils.getInputEnterResult(mBact, etViewMemberNickName);
@@ -85,11 +87,11 @@ public class HomePayFragment extends HomeBaseFragment {
 
         //取消   新增会员
         CommonViewUtils.setOnClick(tvViewMemberCancel, view -> {
-            posMainActivity.showProductFragment();
+            posActivity.showProductFragment();
         });
         //关闭 新增会员
         CommonViewUtils.setOnClick(tv_close_add_member_fragment, view -> {
-            posMainActivity.showProductFragment();
+            posActivity.showProductFragment();
         });
 
         CommonViewUtils.setOnClick(ev_selete_member_birthday, view -> {
@@ -149,7 +151,7 @@ public class HomePayFragment extends HomeBaseFragment {
             json.put("sex", sex);
             json.put("birthDate", birthDate);
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDNEWMEMBER, HomeMemberInfo.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDNEWMEMBER, CommonResult.class, result -> {
                 onNewMemberResult(result);
             });
         } catch (Exception e) {
@@ -158,17 +160,18 @@ public class HomePayFragment extends HomeBaseFragment {
         }
     }
 
-    private void onNewMemberResult(HomeMemberInfo result) {
+    private void onNewMemberResult(CommonResult commonResult) {
         mBact.showLoading(false);
-        XLog.d(result);
-        if (result.getData() == null) {
+        XLog.d(commonResult);
+        if (commonResult.getResult() == null) {
             showToast("增加会员信息失败");
             return;
         }
+        HomeMemberInfo homeMemberInfo = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),HomeMemberInfo.class);
         BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GOTO_ADD_MEMBER_FRAGMENT);
-        eventBean.setValue(result.getData().get(0));
+        eventBean.setValue(homeMemberInfo);
         EventBus.getDefault().post(eventBean);
-        posMainActivity.showProductFragment();
+        posActivity.showProductFragment();
 
         etViewMemberPhone.setText("");
         etViewMemberNickName.setText("");

@@ -28,7 +28,7 @@ public class CardListAdapter extends BaseAdapter {
     private ModifyCountInterface modifyCountInterface;
 
     private boolean isMember = false;
-    private HomeMemberInfo.DataBean memberInfoBean;
+    private HomeMemberInfo memberInfoBean;
 
     private int productNum = 0;
     private int preProductNum = 0;
@@ -40,7 +40,7 @@ public class CardListAdapter extends BaseAdapter {
     }
 
 
-    public void setMember(HomeMemberInfo.DataBean memberInfoBean) {
+    public void setMember(HomeMemberInfo memberInfoBean) {
         this.memberInfoBean = memberInfoBean;
         notifyDataSetChanged();
     }
@@ -126,11 +126,11 @@ public class CardListAdapter extends BaseAdapter {
         //商品名称
         hold.tvProductName.setText(list.get(position).getName());
         //商品价格
-        hold.tvProdectPrice.setText(list.get(position).getPrictRetail() + "");
+        hold.tvProdectPrice.setText(list.get(position).getPriceRetail() + "");
         //商品图片
         Glide
                 .with(mContext)
-                .load(list.get(position).getPic())
+                .load(list.get(position).getPicUrls())
                 .placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(hold.ivProdectIcon);
 
         //商品数量
@@ -144,20 +144,20 @@ public class CardListAdapter extends BaseAdapter {
             if (memberInfoBean.getOldAccount() > 0) {
 
                 hold.layout_member_item_price.setVisibility(View.VISIBLE);
-                hold.tv_list_item_vip_price.setText(list.get(position).getVipPrice() + "");
-                itemTotalPrice = BigDecimalUtils.mul(list.get(position).getVipPrice(), list.get(position).getOrderNum(), 2);
-                XLog.e("vip ="+ list.get(position).getVipPrice());
+                hold.tv_list_item_vip_price.setText(list.get(position).getPriceVip() + "");
+                itemTotalPrice = BigDecimalUtils.mul(list.get(position).getPriceVip(), list.get(position).getOrderNum(), 2);
+                XLog.e("vip ="+ list.get(position).getPriceVip());
 
             } else {
-                itemTotalPrice = BigDecimalUtils.mul(list.get(position).getPrictRetail(), list.get(position).getOrderNum(), 2);
+                itemTotalPrice = BigDecimalUtils.mul(list.get(position).getPriceRetail(), list.get(position).getOrderNum(), 2);
                 hold.layout_member_item_price.setVisibility(View.GONE);
 
-                XLog.e("vip2 ="+ list.get(position).getVipPrice());
+                XLog.e("vip2 ="+ list.get(position).getPriceVip());
             }
         } else {
-            itemTotalPrice = BigDecimalUtils.mul(list.get(position).getPrictRetail(), list.get(position).getOrderNum(), 2);
+            itemTotalPrice = BigDecimalUtils.mul(list.get(position).getPriceRetail(), list.get(position).getOrderNum(), 2);
             hold.layout_member_item_price.setVisibility(View.GONE);
-            XLog.e("vip3 ="+ list.get(position).getVipPrice());
+            XLog.e("vip3 ="+ list.get(position).getPriceVip());
         }
         hold.tvProdectTotal.setText(itemTotalPrice + "");
 

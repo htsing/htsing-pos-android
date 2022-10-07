@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.CardListAdapter;
@@ -16,12 +17,14 @@ import com.htsing.pos.base.fragment.HomeBaseFragment;
 import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.bean.MenusBean;
 import com.htsing.pos.bean.ProductList;
+import com.htsing.pos.bean.ShopInfobean;
 import com.htsing.pos.bean.ShopOrderDetail;
 import com.htsing.pos.bean.msg.PayEventBean;
 import com.htsing.pos.callback.ModifyCountInterface;
 import com.htsing.pos.constant.Constant;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
-import com.htsing.pos.ui.login.PosMainActivity;
+import com.htsing.pos.ui.login.PosActivity;
 import com.htsing.pos.utils.BigDecimalUtils;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.htsing.pos.utils.PreferencesUtil;
@@ -56,7 +59,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     //首次加载获取的商品列表
     private List<ProductList.DataBean> cardList;
     private BaseAct mBact;
-    private PosMainActivity posMainActivity;
+    private PosActivity posActivity;
     //会员登录以后，显示会员自己余额
     @BindView(R.id.layout_home_member_info)
     LinearLayout layoutMemberInfo;
@@ -105,7 +108,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     private DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     //存储会员信息的对象
-    private HomeMemberInfo.DataBean memberInfoBean;
+    private HomeMemberInfo memberInfoBean;
     //购物车商品商品数量
     int productNum = 0;
     //购物车商品总价
@@ -121,7 +124,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     @Override
     public void initView() {
         mBact = getAct();
-        posMainActivity = (PosMainActivity) getAct();
+        posActivity = (PosActivity) getAct();
 
         //结算按钮 订单提交
         CommonViewUtils.setOnClick(layoutConfirm, view -> {
@@ -129,7 +132,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         });
         //用户登录 切换充值界面
         CommonViewUtils.setOnClick(tv_member_recharge, view -> {
-            posMainActivity.showRechargeFragment();
+            posActivity.showRechargeFragment();
             BaseEventBean eventBean = new BaseEventBean(BaseEventBean.RECHARGE_MEMBER_FRAGMENT);
             if (memberInfoBean != null) {
                 eventBean.setValue(memberInfoBean);
@@ -160,7 +163,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         //取单功能
         CommonViewUtils.setOnClick(tv_cart_temp_get, view -> {
 
-            posMainActivity.showTempFragment();
+            posActivity.showTempFragment();
         });
 
         //清空购物车
@@ -181,7 +184,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         if (eventBean.getType() == BaseEventBean.TYPE_GOTO_MEMBER_FRAGMENT ||
                 eventBean.getType() == BaseEventBean.TYPE_GOTO_ADD_MEMBER_FRAGMENT) {
 
-            memberInfoBean = (HomeMemberInfo.DataBean) eventBean.getValue();
+            memberInfoBean = (HomeMemberInfo) eventBean.getValue();
 
             if (memberInfoBean != null) {
                 //先隐藏其他的View
@@ -244,8 +247,8 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
                 //先遍历一遍 如果有相同的 就修改商量
                 for (int i = 0; i < cardListAdapter.getList().size(); i++) {
 
-                    XLog.e(dataBean.getProdId() + "   " + cardListAdapter.getList().get(i).getProdId());
-                    if (dataBean.getProdId() == cardListAdapter.getList().get(i).getProdId()) {
+                    XLog.e(dataBean.getSpuCode() + "   " + cardListAdapter.getList().get(i).getSpuCode());
+                    if (dataBean.getSpuCode() == cardListAdapter.getList().get(i).getSpuCode()) {
                         int num = cardListAdapter.getList().get(i).getOrderNum();
                         num++;
                         cardListAdapter.getList().get(i).setOrderNum(num);
@@ -335,15 +338,15 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
                 if (memberInfoBean.getOldAccount() > 0) {
                     //老账户有钱 就享受8.8折扣
-                    totalPrice += BigDecimalUtils.mul(bean.getVipPrice(), bean.getOrderNum(), 2);
+                    totalPrice += BigDecimalUtils.mul(bean.getPriceVip(), bean.getOrderNum(), 2);
                 } else {
-                    totalPrice += BigDecimalUtils.mul(bean.getPrictRetail(), bean.getOrderNum(), 2);
+                    totalPrice += BigDecimalUtils.mul(bean.getPriceRetail(), bean.getOrderNum(), 2);
                 }
 
             } else {
 //                itemTotalPrice = BigDecimalUtils.mul(bean.getPrice(), bean.getOrderNum(), 1);
 
-                totalPrice += BigDecimalUtils.mul(bean.getPrictRetail(), bean.getOrderNum(), 2);
+                totalPrice += BigDecimalUtils.mul(bean.getPriceRetail(), bean.getOrderNum(), 2);
             }
         }
 
@@ -396,7 +399,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
                     JSONObject orderBean = new JSONObject();
                     orderBean.put("count", bean.getOrderNum());//产品数量
-                    orderBean.put("prodId", bean.getProdId());//产品ID
+                    orderBean.put("spuCode", bean.getSpuCode());//产品ID
                     jsonArray.put(orderBean);
                 }
             }
@@ -428,7 +431,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 //            double actualTotal = result.getData().getRecords().get(0).getActualTotal();
 //            String orderNum = result.getData().getRecords().get(0).getOrderNumber();
 
-            posMainActivity.showPayFragment();
+            posActivity.showPayFragment();
             PayEventBean payEventBean = new PayEventBean(BaseEventBean.TYPE_GOTO_PAY_FRAGMENT);
             payEventBean.setValue(result);
             if (memberInfoBean != null) {
@@ -469,7 +472,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
                     JSONObject orderBean = new JSONObject();
                     orderBean.put("count", bean.getOrderNum());//产品数量
-                    orderBean.put("prodId", bean.getProdId());//产品ID
+                    orderBean.put("spuCode", bean.getSpuCode());//产品ID
                     jsonArray.put(orderBean);
                 }
             }
@@ -521,7 +524,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
             String stringUrl = buffer.toString();
             mBact.showLoading();
-            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
+            easyPost(json, stringUrl, CommonResult.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -548,7 +551,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
             String stringUrl = buffer.toString();
             mBact.showLoading();
-            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
+            easyPost(json, stringUrl, CommonResult.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -558,13 +561,14 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
     }
 
-    private void onMemberResult(HomeMemberInfo relust) {
-        if (relust.getData() == null) {
+    private void onMemberResult(CommonResult commonResult) {
+        if (commonResult.getResult() == null) {
             showToast("会员信息为空");
             return;
         } else {
+            HomeMemberInfo homeMemberInfo = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),HomeMemberInfo.class);
             BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GOTO_MEMBER_FRAGMENT);
-            eventBean.setValue(relust.getData().get(0));
+            eventBean.setValue(homeMemberInfo);
             EventBus.getDefault().post(eventBean);
         }
 
@@ -578,32 +582,31 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      */
     private ProductList.DataBean getNewDataBean(ProductList.DataBean dataBean) {
         ProductList.DataBean bean = new ProductList.DataBean();
-        bean.setProdId(dataBean.getProdId());
+        bean.setSpuCode(dataBean.getSpuCode());
         bean.setOrderNum(1);
-        bean.setShopId(dataBean.getShopId());
-        bean.setPrictRetail(dataBean.getPrictRetail());
+        bean.setPriceRetail(dataBean.getPriceRetail());
         bean.setName(dataBean.getName());
-        bean.setPic(dataBean.getPic());
-        bean.setVipDiscount(dataBean.getVipDiscount());
+        bean.setPicUrls(dataBean.getPicUrls());
+        bean.setPriceVip(dataBean.getPriceVip());
 
         double vipPrice = 0;
 
-        if (bean.getVipDiscount() == 0) {
+        if (bean.getPriceVip() == 0) {
 
             //日常价 活动商品 不享受折扣
-            vipPrice = bean.getPrictRetail();
+            vipPrice = bean.getPriceRetail();
         } else {
             //如果折扣 大于0  就享受会员价
-            vipPrice = BigDecimalUtils.mul(bean.getPrictRetail(), 0.88, 2);
+            vipPrice = BigDecimalUtils.mul(bean.getPriceRetail(), 0.88, 2);
         }
 
         XLog.d("vipPrice = " + vipPrice);
 
 //        bean.setVipPrice(dataBean.getVipPrice());
 
-        bean.setVipPrice(vipPrice);
+        bean.setPriceVip(vipPrice);
 
-        bean.setBarCode(dataBean.getBarCode());
+        bean.setScanCode(dataBean.getScanCode());
 
         return bean;
     }
@@ -613,7 +616,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     private void formatGoods(ProductList.DataBean gvBeans) {
         MenusBean bean = new MenusBean();
         bean.setId("" + (menus.size() + 1));
-        bean.setMoney(gvBeans.getPrictRetail() + "");
+        bean.setMoney(gvBeans.getPriceRetail() + "");
         bean.setName(gvBeans.getName());
         bean.setType(0);
 //        bean.setCode(gvBeans.getBarCode());
@@ -622,7 +625,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         for (MenusBean bean1 : menus) {
             price = price + Float.parseFloat(bean1.getMoney().substring(1));
         }
-        Log.e("@@@@", "code==" + gvBeans.getProdId());
+        Log.e("@@@@", "spuCode==" + gvBeans.getSpuCode());
         buildMenuJson(menus, decimalFormat.format(price));
     }
 
@@ -743,33 +746,31 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
     private ProductList.DataBean getNewTempDataBean(ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean dataBean) {
         ProductList.DataBean bean = new ProductList.DataBean();
-        bean.setProdId(dataBean.getProdId());
+        bean.setSpuCode(String.valueOf(dataBean.getProdId()));
         bean.setOrderNum(1);
-        bean.setShopId(dataBean.getShopId());
-        bean.setPrictRetail(dataBean.getPrice());
+        bean.setPriceRetail(dataBean.getPrice());
         bean.setName(dataBean.getProdName());
-        bean.setPic(dataBean.getPic());
         //要修改！！！
-        bean.setVipDiscount(dataBean.getVipDiscount());
+//        bean.setVipDiscount(dataBean.getVipDiscount());
 
         bean.setOrderNum(dataBean.getProdCount());//设置挂单数量
 
         double vipPrice = 0;
 
-        if (bean.getVipDiscount() == 0) {
+        if (bean.getPriceVip() == 0) {
 
             //日常价 活动商品 不享受折扣
-            vipPrice = bean.getPrictRetail();
+            vipPrice = bean.getPriceRetail();
         } else {
             //如果折扣 大于0  就享受会员价
-            vipPrice = BigDecimalUtils.mul(bean.getPrictRetail(), 0.88, 2);
+            vipPrice = BigDecimalUtils.mul(bean.getPriceRetail(), 0.88, 2);
         }
 
         XLog.d("vipPrice = " + vipPrice);
 
 //        bean.setVipPrice(dataBean.getVipPrice());
 
-        bean.setVipPrice(vipPrice);
+        bean.setPriceVip(vipPrice);
 
 //        bean.setBarCode(dataBean.getBarCode());
 

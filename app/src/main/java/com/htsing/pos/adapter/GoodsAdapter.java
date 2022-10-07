@@ -75,13 +75,13 @@ public class GoodsAdapter extends BaseAdapter {
 
         Glide
                 .with(mContext)
-                .load(list.get(position).getPic())
+                .load(list.get(position).getPicUrls())
                 .placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(hold.ivPhoto);
 
 
         hold.tvName.setText(list.get(position).getName());
-        hold.tvPrice.setText(list.get(position).getPrictRetail()+"");
-        hold.tvStock.setText(list.get(position).getTotalStocks()+"");
+        hold.tvPrice.setText(list.get(position).getPriceRetail()+"");
+        hold.tvStock.setText(list.get(position).getPriceVip()+"");
 
 //        switch (mFlag) {
 //            case 1:

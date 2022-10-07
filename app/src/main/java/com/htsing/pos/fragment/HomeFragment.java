@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.CardListAdapter;
@@ -23,9 +24,11 @@ import com.htsing.pos.bean.Category;
 import com.htsing.pos.bean.OrderSusses;
 import com.htsing.pos.bean.ProductList;
 import com.htsing.pos.constant.Constant;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
-import com.htsing.pos.ui.login.PosMainActivity;
+import com.htsing.pos.ui.login.PosActivity;
 import com.htsing.pos.utils.CommonViewUtils;
+import com.htsing.pos.utils.JsonParseUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -33,9 +36,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
+import cn.hutool.json.JSONUtil;
 
 public class HomeFragment extends HomeBaseFragment {
     //监听 商米收银设备 扫码枪的广播
@@ -55,7 +61,7 @@ public class HomeFragment extends HomeBaseFragment {
     //首次加载获取的商品列表
     private List<ProductList.DataBean> cardList;
     //首次加载获取的商品分类
-    private List<Category.DataBean> categoryList;
+    private List<Category> categoryList;
 
     //首次获取商品列表的GridView
     @BindView(R.id.gv_shop_list)
@@ -101,7 +107,7 @@ public class HomeFragment extends HomeBaseFragment {
 
 
     private BaseAct mBact;
-    private PosMainActivity posMainActivity;
+    private PosActivity posActivity;
 
     @Override
     public int getLayout() {
@@ -111,7 +117,7 @@ public class HomeFragment extends HomeBaseFragment {
     @Override
     public void initView() {
         mBact = getAct();
-        posMainActivity = (PosMainActivity) getAct();
+        posActivity = (PosActivity) getAct();
 
         cardList = new ArrayList<>();
         categoryList = new ArrayList<>();
@@ -122,7 +128,7 @@ public class HomeFragment extends HomeBaseFragment {
 //            BaseEventBean eventBean = new BaseEventBean(BaseEventBean.HOME_PAY_FRAGMENT);
 //            EventBus.getDefault().post(eventBean);
 // modify 2022.05.28
-            posMainActivity.replaceFragment(posMainActivity.homePayFragment);
+            posActivity.replaceFragment(posActivity.homePayFragment);
 
             XLog.d("send msg");
 
@@ -166,7 +172,7 @@ public class HomeFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("shopId", Constant.getShopId());
             mBact.showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductList.class, stringResult -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, CommonResult.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -177,19 +183,17 @@ public class HomeFragment extends HomeBaseFragment {
     /**
      * 获取商品列表的接口回调处理方法
      *
-     * @param result
+     * @param commonResult
      */
-    private void onProductsResult(ProductList result) {
+    private void onProductsResult(CommonResult commonResult) {
         XLog.d("onProductsResult    = ");
         mBact.showLoading(false);
-        if (result != null) {
-            List<ProductList.DataBean> data = result.getRecords();
-            if (data != null) {
-                ProductList.DataBean bean = data.get(0);
-                String shopName = bean.getShopName();
-                XLog.d("shopName   = " + shopName);
+        if (commonResult.getResult() != null) {
+            ProductList productList = JsonParseUtils.parse(new Gson().toJson(commonResult.getResult(), Map.class), ProductList.class);
+            if (productList != null && productList.getRecords().size() > 0) {
+                ProductList.DataBean bean = productList.getRecords().get(0);
 
-                goodsAdapter = new GoodsAdapter(mBact, data, 1);
+                goodsAdapter = new GoodsAdapter(mBact, productList.getRecords(), 1);
                 goodGridView.setAdapter(goodsAdapter);
 //                cataListView.setAdapter(goodsAdapter);
 
@@ -197,11 +201,10 @@ public class HomeFragment extends HomeBaseFragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        ProductList.DataBean bean1 = data.get(position);
+                        ProductList.DataBean bean1 = productList.getRecords().get(position);
                         cardList.add(bean1);
                         cardListAdapter = new CardListAdapter(mBact, cardList, 1);
                         cartListView.setAdapter(cardListAdapter);
-
                     }
                 });
 
@@ -218,7 +221,7 @@ public class HomeFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("shopId", "1");
 //            showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, Category.class, result -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, CommonResult.class, result -> {
                 onCateGoryResult(result);
             });
         } catch (Exception e) {
@@ -231,10 +234,11 @@ public class HomeFragment extends HomeBaseFragment {
      * 根据店铺ID 获取 商品分类列表 的回调处方法
      * * @param result
      */
-    private void onCateGoryResult(Category result) {
+    private void onCateGoryResult(CommonResult result) {
 //        showLoading(false);
         if (result != null) {
-            categoryList = result.getData();
+            Category[] array = new Gson().fromJson(new Gson().toJson(result.getResult()),Category[].class);
+            List<Category> categoryList = Arrays.asList(array);
             cataListAdapter = new CategoryListAdapter(mBact, categoryList, 1);
             cataListView.setAdapter(cataListAdapter);
             cataListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -242,7 +246,7 @@ public class HomeFragment extends HomeBaseFragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     //获取用户点击item对应的category ID；
-                    getProductByShopId(categoryList.get(position).getCategoryId());
+                    getProductByShopId(categoryList.get(position).getId());
                 }
             });
         }
@@ -259,7 +263,7 @@ public class HomeFragment extends HomeBaseFragment {
             json.put("shopId", Constant.getShopId());
             json.put("categoryId", categoryId);
             mBact.showLoading();
-            easyGet(json, getProductByShopIdUrl, ProductList.class, stringResult -> {
+            easyGet(json, getProductByShopIdUrl, CommonResult.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -285,7 +289,7 @@ public class HomeFragment extends HomeBaseFragment {
 
                     JSONObject orderBean = new JSONObject();
                     orderBean.put("count", bean.getOrderNum());
-                    orderBean.put("prodId", bean.getProdId());
+                    orderBean.put("prodId", bean.getSpuCode());
                     jsonArray.put(orderBean);
 
                 }
@@ -329,7 +333,7 @@ public class HomeFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("barCode", "400");
             mBact.showLoading();
-            easyGet(json, getProductByBarCodeUrl, ProductList.class, result -> {
+            easyGet(json, getProductByBarCodeUrl, CommonResult.class, result -> {
                 onProductResultBybarCode(result);
             });
         } catch (Exception e) {
@@ -337,15 +341,13 @@ public class HomeFragment extends HomeBaseFragment {
         }
     }
 
-    private void onProductResultBybarCode(ProductList result) {
+    private void onProductResultBybarCode(CommonResult commonResult) {
         mBact.showLoading(false);
         XLog.d("onProductsResult    = ");
-        if (result != null) {
-            List<ProductList.DataBean> data = result.getRecords();
-            if (data != null) {
-                ProductList.DataBean bean = data.get(0);
-                String shopName = bean.getShopName();
-                XLog.d("shopName   = " + shopName);
+        if (commonResult.getResult() != null) {
+            ProductList productList = JsonParseUtils.parse(new Gson().toJson(commonResult.getResult(), Map.class), ProductList.class);
+            if (productList != null && productList.getRecords().size() > 0) {
+                ProductList.DataBean bean = productList.getRecords().get(0);
             }
         }
     }

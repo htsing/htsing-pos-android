@@ -150,15 +150,15 @@ public class ShiftJobActivity extends BaseAct {
 
     private void onRecordResult(RecordList relult) {
         XLog.d(relult);
-        if (relult.getData() == null) {
+        if (relult.getRecords() == null) {
             showToast("没有数据哟");
             return;
         }
 
-        for (int i = 0; i < relult.getData().getRecords().size(); i++) {
+        for (int i = 0; i < relult.getRecords().size(); i++) {
 
-            XLog.d("shop = " + relult.getData().getRecords().get(i).getShopId() + " amount = "
-                    + relult.getData().getRecords().get(i).getAmount());
+            XLog.d("shop = " + relult.getRecords().get(i).getShopId() + " amount = "
+                    + relult.getRecords().get(i).getAmount());
         }
     }
 

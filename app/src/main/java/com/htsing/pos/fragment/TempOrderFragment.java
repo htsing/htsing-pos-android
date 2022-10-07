@@ -2,6 +2,7 @@ package com.htsing.pos.fragment;
 
 import android.widget.TextView;
 
+import com.htsing.pos.ui.login.PosActivity;
 import com.pgyer.pgyersdk.PgyerSDKManager;
 
 import com.elvishew.xlog.XLog;
@@ -14,7 +15,6 @@ import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.bean.ShopOrderDetail;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
-import com.htsing.pos.ui.login.PosMainActivity;
 import com.htsing.pos.utils.CommonViewUtils;
 
 import com.htsing.pos.bean.msg.PayEventBean;
@@ -30,7 +30,7 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
 
 
     private BaseAct mBact;
-    private PosMainActivity posMainActivity;
+    private PosActivity posActivity;
     //会员充值关闭
     @BindView(R.id.tv_close_temp_order_fragment)
     TextView tv_close_temp_order_fragment;
@@ -51,10 +51,10 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
         super.initView();//初始化 下拉刷新的ListView
 
         mBact = getAct();
-        posMainActivity = (PosMainActivity) getAct();
+        posActivity = (PosActivity) getAct();
 
         CommonViewUtils.setOnClick(tv_close_temp_order_fragment, view -> {
-            posMainActivity.showProductFragment();
+            posActivity.showProductFragment();
 
         });
 
@@ -155,7 +155,7 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
         }
 
         this.relustOrder = item;
-        posMainActivity.showProductFragment();
+        posActivity.showProductFragment();
 
         PayEventBean payEventBean = new PayEventBean(BaseEventBean.TEMP_ORDER_DATA);
         payEventBean.setValue(relustOrder);

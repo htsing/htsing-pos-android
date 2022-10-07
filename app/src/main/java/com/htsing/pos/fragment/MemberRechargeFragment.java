@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatCheckBox;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
@@ -16,9 +17,10 @@ import com.htsing.pos.bean.Recharge;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.dialog.PaySussessDialog;
 import com.htsing.pos.dialog.RechargeTipsDialog;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.mvp.callback.OnRequestSuccess;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
-import com.htsing.pos.ui.login.PosMainActivity;
+import com.htsing.pos.ui.login.PosActivity;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.htsing.pos.utils.PreferencesUtil;
 import com.htsing.pos.utils.TTSUtils;
@@ -79,10 +81,10 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
     //用来记录 用户的充值金额
     StringBuffer chshBuffer;
 
-    private PosMainActivity posMainActivity;
+    private PosActivity posActivity;
     private BaseAct mBact;
     //存储会员对象
-    private HomeMemberInfo.DataBean memberInfoBean;
+    private HomeMemberInfo memberInfoBean;
     //记录 生产的充值订单对象
     private Recharge rechargeBean;
 
@@ -96,13 +98,13 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
     @Override
     public void initView() {
         mBact = getAct();
-        posMainActivity = (PosMainActivity) getAct();
+        posActivity = (PosActivity) getAct();
 
         tv_code_recgarge_order_num.setVisibility(View.GONE);
         tv_code_recgarge_order_tips.setVisibility(View.GONE);
 
         CommonViewUtils.setOnClick(recharge_order_no, view -> {
-            posMainActivity.showProductFragment();
+            posActivity.showProductFragment();
             et_cash_pay_recharge_total.setText("请选择充值金额");
 
             if (tv_code_recgarge_order_num.getVisibility() == View.VISIBLE)
@@ -153,7 +155,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
 
 
         CommonViewUtils.setOnClick(tv_recgarge_member_fragment, view -> {
-            posMainActivity.showProductFragment();
+            posActivity.showProductFragment();
             et_cash_pay_recharge_total.setText("请选择充值金额");
         });
 
@@ -265,7 +267,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
             JSONObject json = new JSONObject();
             json.put("orderNumber", databean.getData());
             mBact.showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYCASH, HomeMemberInfo.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYCASH, CommonResult.class, result -> {
                 onDepositMoneyByCash(result);
             });
         } catch (Exception e) {
@@ -277,66 +279,63 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
     /**
      * 扫码充值成功以后，不发消息给显示购物车fragment
      *
-     * @param result
+     * @param commonResult
      */
-    private void onDepositMoneyByCode(HomeMemberInfo result) {
+    private void onDepositMoneyByCode(CommonResult commonResult) {
         mBact.showLoading(false);
 
-        if (result == null) {
-            return;
-        }
-        if (result.getData() == null) {
-            return;
-        }
-        if (result.getData().get(0) == null) {
-            return;
-        }
 
-        if (result != null) {
-            if (result.getData().get(0) != null) {
+        if (commonResult.getResult() == null) {
+            return;
+        }
+        HomeMemberInfo homeMemberInfo = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),HomeMemberInfo.class);
 
-                //收到支付成功的消息以后，在发消息
+        if (homeMemberInfo != null) {
+
+
+            //收到支付成功的消息以后，在发消息
 //                showToast("解析成功");
 //                BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GOTO_MEMBER_FRAGMENT);
 //                eventBean.setValue(result.getData().get(0));
 //                EventBus.getDefault().post(eventBean);
-                //重置View
-                tv_code_recgarge_order_tips.setVisibility(View.GONE);
-                tv_code_recgarge_order_num.setVisibility(View.GONE);
-                tv_code_recgarge_order_num.setText("");
-                et_cash_pay_recharge_total.setText("");
+            //重置View
+            tv_code_recgarge_order_tips.setVisibility(View.GONE);
+            tv_code_recgarge_order_num.setVisibility(View.GONE);
+            tv_code_recgarge_order_num.setText("");
+            et_cash_pay_recharge_total.setText("");
 
 //                testActivity.showProductFragment();
-                posMainActivity.printMemberRechargeInfo(result.getData().get(0), rechargeBean, 1);
+            posActivity.printMemberRechargeInfo(homeMemberInfo, rechargeBean, 1);
 
 
-                PaySussessDialog dialog = new PaySussessDialog(getAct(), 1);
-                dialog.setListener(this::onResult);
+            PaySussessDialog dialog = new PaySussessDialog(getAct(), 1);
+            dialog.setListener(this::onResult);
 
-            } else {
-                showToast("无会员数据");
-                PaySussessDialog dialog = new PaySussessDialog(getAct(), 0);
-                dialog.setListener(this::onResult);
-            }
-
+        } else {
+            showToast("无会员数据");
+            PaySussessDialog dialog = new PaySussessDialog(getAct(), 0);
+            dialog.setListener(this::onResult);
         }
+
+
     }
 
     /**
      * 充值成功以后，发消息给显示购物车fragment
      *
-     * @param result
+     * @param commonResult
      */
-    private void onDepositMoneyByCash(HomeMemberInfo result) {
+    private void onDepositMoneyByCash(CommonResult commonResult) {
         mBact.showLoading(false);
 
-        if (result != null) {
-            if (result.getData().get(0) != null) {
+        if (commonResult.getResult() != null) {
+            HomeMemberInfo homeMemberInfo = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),HomeMemberInfo.class);
+            if (homeMemberInfo != null) {
 
                 //收到现金支付成功的消息以后，在发消息
                 showToast("解析成功");
                 BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GOTO_MEMBER_FRAGMENT);
-                eventBean.setValue(result.getData().get(0));
+                eventBean.setValue(homeMemberInfo);
                 EventBus.getDefault().post(eventBean);
                 //重置View
                 tv_code_recgarge_order_tips.setVisibility(View.GONE);
@@ -345,7 +344,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
                 et_cash_pay_recharge_total.setText("");
 
 //                testActivity.showProductFragment();
-                posMainActivity.printMemberRechargeInfo(result.getData().get(0), rechargeBean, 1);
+                posActivity.printMemberRechargeInfo(homeMemberInfo, rechargeBean, 1);
 
 
                 PaySussessDialog dialog = new PaySussessDialog(getAct(), 1);
@@ -379,7 +378,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
             dialog.dismiss();
         }
 
-        posMainActivity.showProductFragment();
+        posActivity.showProductFragment();
     }
 
 
@@ -394,7 +393,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
 
         buffer.append("扫码充值" + price + "元");
 
-        TTSUtils.getInstance(posMainActivity).startSpeaking(buffer.toString());
+        TTSUtils.getInstance(posActivity).startSpeaking(buffer.toString());
 
     }
 
@@ -434,7 +433,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
             json.put("orderNumber", rechargeBean.getData());
             json.put("payCode", code);
             mBact.showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYUMS, HomeMemberInfo.class, result -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.DEPOSITMONEYBYUMS, CommonResult.class, result -> {
                 onDepositMoneyByCode(result);
                 //扫码 充值以后，收到服务端请求以后，在更新会员行
             });
@@ -457,7 +456,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
             tv_code_recgarge_order_num.setVisibility(View.VISIBLE);
             tv_code_recgarge_order_num.setText(result.getData());
 
-            dialog = new RechargeTipsDialog(posMainActivity);
+            dialog = new RechargeTipsDialog(posActivity);
         }
     }
 
@@ -471,7 +470,7 @@ public class MemberRechargeFragment extends HomeBaseFragment implements OnReques
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleEvent(BaseEventBean messageEvent) {
         if (messageEvent.getType() == BaseEventBean.RECHARGE_MEMBER_FRAGMENT) {
-            this.memberInfoBean = (HomeMemberInfo.DataBean) messageEvent.getValue();
+            this.memberInfoBean = (HomeMemberInfo) messageEvent.getValue();
         }
     }
 

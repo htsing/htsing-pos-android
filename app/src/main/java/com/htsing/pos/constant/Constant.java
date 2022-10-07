@@ -36,6 +36,8 @@ public class Constant {
     public static String gradeClsStr = ""; //年级 班级
     public static String token = "";
     public static String shopId = "";
+    public static String shopName = "";
+    public static String tenantName = "";
     public static String userId = "";
     public static String userName = "";
     public static String tenantId = "";
@@ -62,7 +64,6 @@ public class Constant {
     public static final String SP_USERNAME = "userName";
     public static final String SP_AVATAR = "avatar";
     public static final String SP_CID = "cid";
-    public static final String SP_SHOPOWNER = "shopOwner";
     public static final String SP_SHOPNAME = "shopName";
     public static final String SP_SHOPADDRESS = "shopAddress";
     public static final String SP_SHOPPHONE = "phone";
@@ -109,6 +110,20 @@ public class Constant {
             shopId = PreferencesUtil.getString(App.getContext(), SP_SHOPID);
         }
         return shopId;
+    }
+
+    public static String getShopName() {
+        if (TextUtils.isEmpty(shopName)) {
+            shopName = PreferencesUtil.getString(App.getContext(), SP_SHOPNAME);
+        }
+        return shopName;
+    }
+
+    public static String getTenantName() {
+        if (TextUtils.isEmpty(tenantName)) {
+            tenantName = PreferencesUtil.getString(App.getContext(), SP_TENANTNAME);
+        }
+        return tenantName;
     }
 
     public static String getUserId() {

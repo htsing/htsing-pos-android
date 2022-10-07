@@ -18,6 +18,7 @@ import com.htsing.pos.mvp.Interceptor.BaseUrlInterceptor;
 import com.htsing.pos.mvp.http.Http;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.utils.NetworkUtils;
+import com.zhouyou.http.BuildConfig;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.cache.converter.SerializableDiskConverter;
 import com.zhouyou.http.cache.model.CacheMode;

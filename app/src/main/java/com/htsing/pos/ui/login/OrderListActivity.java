@@ -72,12 +72,12 @@ public class OrderListActivity extends BaseAct {
         replaceFragment(orderListFragment);
 
         CommonViewUtils.setOnClick(layoutLogoInfo, view -> {
-            Intent intent = new Intent(getApplicationContext(), PosMainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PosActivity.class);
             startActivity(intent);
         });
         connectPrintService();
         tv_shop_name.setText(PreferencesUtil.getString(mContext, Constant.SP_SHOPNAME));
-        tv_cashier_name.setText(PreferencesUtil.getString(mContext, Constant.SP_SHOPOWNER));
+        tv_cashier_name.setText(PreferencesUtil.getString(mContext, Constant.SP_USERNAME));
     }
 
     @Override
@@ -115,7 +115,7 @@ public class OrderListActivity extends BaseAct {
         transaction.commit();
     }
 
-    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo.DataBean memberInfoBean) {
+    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo memberInfoBean) {
         XLog.d(goods_data);
         printerPresenter.setRelustOrder(orderBean);
         printerPresenter.setMemberInfoBean(memberInfoBean);

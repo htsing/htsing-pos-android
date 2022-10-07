@@ -162,7 +162,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.HtsingPos.NoActionBar" />
         <activity
-            android:name="com.htsing.pos.ui.login.PosMainActivity"
+            android:name="com.htsing.pos.ui.login.PosActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.HtsingPos.NoActionBar"

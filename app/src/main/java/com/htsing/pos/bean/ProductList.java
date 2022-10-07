@@ -6,14 +6,14 @@ import java.io.Serializable;
 import java.util.List;
 
 
-public class ProductList extends CommonResult {
+public class ProductList  {
 
     private int total;
     private int size;
     private int current;
     private boolean searchCount;
     private int pages;
-    private List<ProductList.DataBean> records;
+    private List<DataBean> records;
 
     public int getTotal() {
         return total;
@@ -39,7 +39,7 @@ public class ProductList extends CommonResult {
         this.current = current;
     }
 
-    public boolean isSearchCount() {
+    public boolean getSearchCount() {
         return searchCount;
     }
 
@@ -104,80 +104,78 @@ public class ProductList extends CommonResult {
          * barCode : null
          */
 
-        private int prodId;
-        private int shopId;
+        private int id;
+        private String tenantId;
+        private String partnerId;
+        private String spuCode;
+        private String scanCode;
         private String name;
-        private double prictRetail;
-        private double prictVip;
         private String brief;
-        private String pic;
-        private String imgs;
-        private int status;
         private int categoryId;
-        private int soldNum;
-        private int totalStocks;
-        private String deliveryMode;
-        private Object deliveryTemplateId;
+        private String[] picUrls;
+        private int sort;
+        private String shopId;
+        private double priceCost;
+        private double stock = 0;
+        private double priceRetail;
+        private double priceVip;
+        private int sales;
+        private String createBy;
+        private int attributeFlag;
+        private int status;
+        private String deliveryId;
         private String createTime;
         private String updateTime;
-        private String content;
-        private String putawayTime;
-        private Object version;
-        private int isSpread;
-        private int isSignboard;
-        private Object skuList;
-        private Object categoryList;
-        private String shopName;
-        private Object tagList;
-        private double activityPrice;
-        private int activityId;
-        private int activityTimes;
-        private int activityTimesFlag;
-        private int activityOrderTimes;
-        private int activityOrderFlag;
-        private String isOnlySelfmention;
-        private int isHotProd;
-        private Object isGroupProd;
-        private int saleType;
-        private Object barCode;
+        private String unit;
+        private String unitId;
+        private String videoPath;
+        private String pickupTips;
+        private int exp;
+        private int packages;
+        private String model;
+        private String standard;
+        private String[] skus;
 
-        private double vipPrice;
-        private int vipDiscount;
-
-        public int getVipDiscount() {
-            return vipDiscount;
+        public double getPriceRetail() {
+            return priceRetail;
         }
 
-        public void setVipDiscount(int vipDiscount) {
-            this.vipDiscount = vipDiscount;
+        public void setPriceRetail(double priceRetail) {
+            this.priceRetail = priceRetail;
         }
 
-
-
-        public double getVipPrice() {
-            return vipPrice;
+        public double getPriceVip() {
+            return priceVip;
         }
 
-        public void setVipPrice(double vipPrice) {
-            this.vipPrice = vipPrice;
+        public void setPriceVip(double priceVip) {
+            this.priceVip = priceVip;
         }
 
         private int orderNum = 1;
 
-        public int getProdId() {
-            return prodId;
+        public int getId() {
+            return id;
         }
 
-        public void setProdId(int prodId) {
-            this.prodId = prodId;
+        public void setId(int id) {
+            this.id = id;
         }
 
-        public int getShopId() {
-            return shopId;
+        public String getSpuCode() {
+            return spuCode;
         }
 
-        public void setShopId(int shopId) {
-            this.shopId = shopId;
+        public void setSpuCode(String spuCode) {
+            this.spuCode = spuCode;
+        }
+
+        public String[] getPicUrls() {
+            return picUrls;
+        }
+
+        public void setPicUrls(String[] picUrls) {
+            this.picUrls = picUrls;
         }
 
         public String getName() {
@@ -188,22 +186,6 @@ public class ProductList extends CommonResult {
             this.name = prodName;
         }
 
-        public double getPrictRetail() {
-            return prictRetail;
-        }
-
-        public void setPrictRetail(double prictRetail) {
-            this.prictRetail = prictRetail;
-        }
-
-        public double getPrictVip() {
-            return prictVip;
-        }
-
-        public void setPrictVip(double prictVip) {
-            this.prictVip = prictVip;
-        }
-
         public String getBrief() {
             return brief;
         }
@@ -212,20 +194,12 @@ public class ProductList extends CommonResult {
             this.brief = brief;
         }
 
-        public String getPic() {
-            return pic;
+        public String getUnit() {
+            return unit;
         }
 
-        public void setPic(String pic) {
-            this.pic = pic;
-        }
-
-        public String getImgs() {
-            return imgs;
-        }
-
-        public void setImgs(String imgs) {
-            this.imgs = imgs;
+        public void setUnit(String unit) {
+            this.unit = unit;
         }
 
         public int getStatus() {
@@ -244,38 +218,6 @@ public class ProductList extends CommonResult {
             this.categoryId = categoryId;
         }
 
-        public int getSoldNum() {
-            return soldNum;
-        }
-
-        public void setSoldNum(int soldNum) {
-            this.soldNum = soldNum;
-        }
-
-        public int getTotalStocks() {
-            return totalStocks;
-        }
-
-        public void setTotalStocks(int totalStocks) {
-            this.totalStocks = totalStocks;
-        }
-
-        public String getDeliveryMode() {
-            return deliveryMode;
-        }
-
-        public void setDeliveryMode(String deliveryMode) {
-            this.deliveryMode = deliveryMode;
-        }
-
-        public Object getDeliveryTemplateId() {
-            return deliveryTemplateId;
-        }
-
-        public void setDeliveryTemplateId(Object deliveryTemplateId) {
-            this.deliveryTemplateId = deliveryTemplateId;
-        }
-
         public String getCreateTime() {
             return createTime;
         }
@@ -292,164 +234,12 @@ public class ProductList extends CommonResult {
             this.updateTime = updateTime;
         }
 
-        public String getContent() {
-            return content;
+        public String getScanCode() {
+            return scanCode;
         }
 
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public String getPutawayTime() {
-            return putawayTime;
-        }
-
-        public void setPutawayTime(String putawayTime) {
-            this.putawayTime = putawayTime;
-        }
-
-        public Object getVersion() {
-            return version;
-        }
-
-        public void setVersion(Object version) {
-            this.version = version;
-        }
-
-        public int getIsSpread() {
-            return isSpread;
-        }
-
-        public void setIsSpread(int isSpread) {
-            this.isSpread = isSpread;
-        }
-
-        public int getIsSignboard() {
-            return isSignboard;
-        }
-
-        public void setIsSignboard(int isSignboard) {
-            this.isSignboard = isSignboard;
-        }
-
-        public Object getSkuList() {
-            return skuList;
-        }
-
-        public void setSkuList(Object skuList) {
-            this.skuList = skuList;
-        }
-
-        public Object getCategoryList() {
-            return categoryList;
-        }
-
-        public void setCategoryList(Object categoryList) {
-            this.categoryList = categoryList;
-        }
-
-        public String getShopName() {
-            return shopName;
-        }
-
-        public void setShopName(String shopName) {
-            this.shopName = shopName;
-        }
-
-        public Object getTagList() {
-            return tagList;
-        }
-
-        public void setTagList(Object tagList) {
-            this.tagList = tagList;
-        }
-
-        public double getActivityPrice() {
-            return activityPrice;
-        }
-
-        public void setActivityPrice(double activityPrice) {
-            this.activityPrice = activityPrice;
-        }
-
-        public int getActivityId() {
-            return activityId;
-        }
-
-        public void setActivityId(int activityId) {
-            this.activityId = activityId;
-        }
-
-        public int getActivityTimes() {
-            return activityTimes;
-        }
-
-        public void setActivityTimes(int activityTimes) {
-            this.activityTimes = activityTimes;
-        }
-
-        public int getActivityTimesFlag() {
-            return activityTimesFlag;
-        }
-
-        public void setActivityTimesFlag(int activityTimesFlag) {
-            this.activityTimesFlag = activityTimesFlag;
-        }
-
-        public int getActivityOrderTimes() {
-            return activityOrderTimes;
-        }
-
-        public void setActivityOrderTimes(int activityOrderTimes) {
-            this.activityOrderTimes = activityOrderTimes;
-        }
-
-        public int getActivityOrderFlag() {
-            return activityOrderFlag;
-        }
-
-        public void setActivityOrderFlag(int activityOrderFlag) {
-            this.activityOrderFlag = activityOrderFlag;
-        }
-
-        public String getIsOnlySelfmention() {
-            return isOnlySelfmention;
-        }
-
-        public void setIsOnlySelfmention(String isOnlySelfmention) {
-            this.isOnlySelfmention = isOnlySelfmention;
-        }
-
-        public int getIsHotProd() {
-            return isHotProd;
-        }
-
-        public void setIsHotProd(int isHotProd) {
-            this.isHotProd = isHotProd;
-        }
-
-        public Object getIsGroupProd() {
-            return isGroupProd;
-        }
-
-        public void setIsGroupProd(Object isGroupProd) {
-            this.isGroupProd = isGroupProd;
-        }
-
-        public int getSaleType() {
-            return saleType;
-        }
-
-        public void setSaleType(int saleType) {
-            this.saleType = saleType;
-        }
-
-        public Object getBarCode() {
-            return barCode;
-        }
-
-        public void setBarCode(Object barCode) {
-            this.barCode = barCode;
+        public void setScanCode(String scanCode) {
+            this.scanCode = scanCode;
         }
 
         public int getOrderNum() {
@@ -458,6 +248,14 @@ public class ProductList extends CommonResult {
 
         public void setOrderNum(int orderNum) {
             this.orderNum = orderNum;
+        }
+
+        public double getStock() {
+            return stock;
+        }
+
+        public void seStock(double stock) {
+            this.stock = stock;
         }
     }
 }

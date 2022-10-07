@@ -44,7 +44,7 @@ public class WebAppInterface {
      */
     @JavascriptInterface
     public void getShopOwner(String jsName) {
-        String shopOwner = PreferencesUtil.getString(mContext, Constant.SP_SHOPOWNER);
+        String shopOwner = PreferencesUtil.getString(mContext, Constant.SP_USERNAME);
         loadJSWithParam(jsName, shopOwner);
     }
 

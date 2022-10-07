@@ -5,8 +5,7 @@ import java.util.List;
 
 public class UserInfoBean implements Serializable {
     private int id;
-    private String cashRegisterId;
-    private String name;
+    private String username;
     private String phone;
     private String avatar;
     private String password;
@@ -28,24 +27,16 @@ public class UserInfoBean implements Serializable {
         return id;
     }
 
-    public void setUserId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getCashRegisterId() {
-        return cashRegisterId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setCashRegisterId(String cashRegisterId) {
-        this.cashRegisterId = cashRegisterId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
     public String getTenantName() {
         return tenantName;
@@ -130,9 +121,13 @@ public class UserInfoBean implements Serializable {
     public String toString() {
         return "nickName='" + nickName + '\'' +
             ", shopId='" + shopId + '\'' +
+            ", tenantId='" + tenantId + '\'' +
+            ", shopIds='" + shopIds + '\'' +
+            ", tenantIds='" + tenantIds + '\'' +
             ", shopName='" + shopName + '\'' +
+            ", tenantName='" + tenantName + '\'' +
             ", phone='" + phone + '\''+
             ", avatar='" + avatar + '\''+
-            ", name='" + name + '\'';
+            ", username='" + username + '\'';
     }
 }

@@ -1,5 +1,6 @@
 package com.htsing.pos;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +45,7 @@ public class SplashActivity extends BaseAct {
         iv_code_test = findViewById(R.id.iv_code_test);
         System.out.println("日志打印结束");
 //        splashImageView.setBackground(R.id.a);
-        String imageUrl = "https://images.51xeld.com/2020/09/2fb3bad11ae14d3790087f690c1c2c1f.jpg";
+        String imageUrl = "https://7465-test-6g6qzlf1c3419326-1304114839.tcb.qcloud.la/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20201106110119.jpg";
 //        Glide.with(SplashActivity.this).load(splashImageView).into(splashImageView);
 
 //        Glide
@@ -106,6 +107,7 @@ public class SplashActivity extends BaseAct {
      *
      * @param window 窗口，可用于Activity和Dialog等
      */
+    @SuppressLint("ResourceAsColor")
     public static void setTransparent(Window window) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

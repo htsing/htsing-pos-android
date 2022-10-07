@@ -46,10 +46,10 @@ public class PrinterPresenter {
     private PrinterManager mManager;
 
     private RecordsBean relustOrder;
-    private HomeMemberInfo.DataBean memberInfoBean;
+    private HomeMemberInfo memberInfoBean;
 
 
-    public void setMemberInfoBean(HomeMemberInfo.DataBean memberInfoBean) {
+    public void setMemberInfoBean(HomeMemberInfo memberInfoBean) {
         this.memberInfoBean = memberInfoBean;
     }
 
@@ -437,7 +437,7 @@ public class PrinterPresenter {
         sb.setLength(0);
     }
 
-    public void printMemberInfo(HomeMemberInfo.DataBean memberInfoBean, Recharge bean, final int payMode) {
+    public void printMemberInfo(HomeMemberInfo memberInfoBean, Recharge bean, final int payMode) {
         if (printerService == null) {
             return;
         }

@@ -16,24 +16,24 @@ import java.util.List;
 public class MemberListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<HomeMemberInfo.DataBean> list;
+    private List<HomeMemberInfo> list;
     private int mFlag;
     private int selectPosition = -1;
 
-    public List<HomeMemberInfo.DataBean> getList() {
+    public List<HomeMemberInfo> getList() {
         return list;
     }
 
-    public MemberListAdapter(Context context, List<HomeMemberInfo.DataBean> lvBeans) {
+    public MemberListAdapter(Context context, List<HomeMemberInfo> lvBeans) {
         this.mContext = context;
         this.list = lvBeans;
     }
 
-    public MemberListAdapter(List<HomeMemberInfo.DataBean> var1) {
+    public MemberListAdapter(List<HomeMemberInfo> var1) {
         this.list = var1;
     }
 
-    public void setDataList(List<HomeMemberInfo.DataBean> dataList) {
+    public void setDataList(List<HomeMemberInfo> dataList) {
         this.list = dataList;
         notifyDataSetChanged();
     }

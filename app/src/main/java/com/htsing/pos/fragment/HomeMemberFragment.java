@@ -9,18 +9,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.MemberListAdapter;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.base.fragment.HomeBaseFragment;
+import com.htsing.pos.bean.Category;
 import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
-import com.htsing.pos.ui.login.PosMainActivity;
+import com.htsing.pos.ui.login.PosActivity;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.xw.repo.XEditText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,9 +66,9 @@ public class HomeMemberFragment extends HomeBaseFragment {
     //记录自定义键盘的输入数字
     private StringBuffer phoneBuffer;
 
-    private PosMainActivity posMainActivity;
+    private PosActivity posActivity;
 
-    private List<HomeMemberInfo.DataBean> list;
+    private List<HomeMemberInfo> list;
     private MemberListAdapter memberListAdapter;
 
 
@@ -76,7 +80,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
     @Override
     public void initView() {
         mBact = getAct();
-        posMainActivity = (PosMainActivity) getAct();
+        posActivity = (PosActivity) getAct();
         tvCloseFragment = getViewById(R.id.tv_close_member_fragment);
         tx_delete_one_chart = getViewById(R.id.tx_delete_one_chart);
 
@@ -95,7 +99,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
                 EventBus.getDefault().post(eventBean);
 
                 //重置View
-                posMainActivity.showProductFragment();
+                posActivity.showProductFragment();
                 etSelectMemberPhone.setText("");
                 memberListAdapter.getList().removeAll(memberListAdapter.getList());
                 memberListAdapter.notifyDataSetChanged();
@@ -104,7 +108,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
 
 
         CommonViewUtils.setOnClick(tvCloseFragment, view -> {
-            posMainActivity.showProductFragment();
+            posActivity.showProductFragment();
 //            BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GOTO_HOME_FRAGMENT);
 //            EventBus.getDefault().post(eventBean);
         });
@@ -117,7 +121,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
 
 
         CommonViewUtils.setOnClick(layout_member_null, view -> {
-            posMainActivity.showAddMemberFragment();
+            posActivity.showAddMemberFragment();
 
             etSelectMemberPhone.setText("");
             layout_member_null.setVisibility(View.GONE);
@@ -233,7 +237,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
             String stringUrl = buffer.toString();
             XLog.d(stringUrl);
 
-            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
+            easyPost(json, stringUrl, CommonResult.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -243,7 +247,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
 
     }
 
-    private void onMemberResult(HomeMemberInfo relust) {
+    private void onMemberResult(CommonResult commonResult) {
 //        if (relust.getData() == null) {
 //            showToast("会员信息为空");
 //            layout_member_null.setVisibility(View.VISIBLE);
@@ -252,17 +256,20 @@ public class HomeMemberFragment extends HomeBaseFragment {
 //            layout_member_null.setVisibility(View.GONE);
 //        }
 
-        if (relust == null) {
+        if (commonResult == null) {
             return;
         }
 
-        if (relust.getData() != null) {
+        if (commonResult != null) {
             layout_member_null.setVisibility(View.GONE);
         } else {
             showToast("会员信息为空");
             layout_member_null.setVisibility(View.VISIBLE);
             return;
         }
+        HomeMemberInfo[] array = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),HomeMemberInfo[].class);
+        List<HomeMemberInfo> homeMemberInfoList = Arrays.asList(array);
+
 //        BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GOTO_MEMBER_FRAGMENT);
 //        eventBean.setValue(relust);
 //        EventBus.getDefault().post(eventBean);
@@ -271,7 +278,7 @@ public class HomeMemberFragment extends HomeBaseFragment {
 //        etSelectMemberPhone.setText("");
 //        layout_member_null.setVisibility(View.INVISIBLE);
 
-        memberListAdapter = new MemberListAdapter(mBact, relust.getData());
+        memberListAdapter = new MemberListAdapter(mBact, homeMemberInfoList);
         lv_member_list.setAdapter(memberListAdapter);
 //        memberListAdapter.setDataList(relust.getData());
 

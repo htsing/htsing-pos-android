@@ -19,6 +19,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
+import com.htsing.pos.bean.Category;
+import com.htsing.pos.bean.ProductList;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.sunmi.extprinterservice.ExtPrinterService;
 import com.sunmi.peripheral.printer.InnerPrinterCallback;
 import com.sunmi.peripheral.printer.InnerPrinterException;
@@ -54,12 +58,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import woyou.aidlservice.jiuiv5.ICallback;
 import woyou.aidlservice.jiuiv5.IWoyouService;
 
-public class PosMainActivity extends BaseAct implements ICallback {
+public class PosActivity extends BaseAct implements ICallback {
     //会员
     public HomeMemberFragment memberFragment;
     //增加会员
@@ -137,7 +143,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
         @Override
         protected void onConnected(SunmiPrinterService service) {
             woyouService = service;
-            printerPresenter = new PrinterPresenter(PosMainActivity.this, woyouService);
+            printerPresenter = new PrinterPresenter(PosActivity.this, woyouService);
         }
 
         @Override
@@ -157,7 +163,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             extPrinterService = ExtPrinterService.Stub.asInterface(service);
-            kPrinterPresenter = new KPrinterPresenter(PosMainActivity.this, extPrinterService);
+            kPrinterPresenter = new KPrinterPresenter(PosActivity.this, extPrinterService);
         }
     };
 
@@ -408,7 +414,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
      *
      * @param goods_data 订单数据
      */
-    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo.DataBean memberInfoBean) {
+    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo memberInfoBean) {
         XLog.d(goods_data);
 
         printerPresenter.setRelustOrder(orderBean);
@@ -416,7 +422,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
         printerPresenter.print(goods_data, payMode);
     }
 
-    public void printMemberRechargeInfo(HomeMemberInfo.DataBean memberInfoBean, Recharge rechargeBean, int payMode) {
+    public void printMemberRechargeInfo(HomeMemberInfo memberInfoBean, Recharge rechargeBean, int payMode) {
         printerPresenter.printMemberInfo(memberInfoBean, rechargeBean, payMode);
     }
 
@@ -548,7 +554,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
             json.put("shopId", Constant.getShopId());
             json.put("userId", Constant.getUserId());
 //            showLoading(true);
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.APPSHOPDETAIL+"/"+Constant.getShopId(), ShopInfobean.class, resultBean -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.APPSHOPDETAIL+"/"+Constant.getShopId(), CommonResult.class, resultBean -> {
                 onShopInfoResult(resultBean);
             });
         } catch (Exception e) {
@@ -556,29 +562,29 @@ public class PosMainActivity extends BaseAct implements ICallback {
         }
     }
 
-    private void onShopInfoResult(ShopInfobean resultBean) {
+    private void onShopInfoResult(CommonResult commonResult) {
 //        showLoading(false);
-        if (resultBean == null) {
+        if (commonResult == null) {
             return;
         }
 
-        if (resultBean.getData() != null) {
+        if (commonResult.getResult() != null) {
+            ShopInfobean userInfoBean = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),ShopInfobean.class);
 
-            tv_shop_name.setText(resultBean.getData().getShopName());
+            tv_shop_name.setText(userInfoBean.getName());
 
-            PreferencesUtil.save(mContext, Constant.SP_SHOPNAME, resultBean.getData().getShopName());
+            PreferencesUtil.save(mContext, Constant.SP_SHOPNAME, userInfoBean.getName());
 
             //拼接 省市区字符串
             StringBuffer buffer = new StringBuffer();
-            buffer.append(resultBean.getData().getProvince());
-            buffer.append(resultBean.getData().getCity());
-            buffer.append(resultBean.getData().getArea());
-            buffer.append(resultBean.getData().getShopAddress());
+            buffer.append(userInfoBean.getAddress());
+            buffer.append(userInfoBean.getName());
+            buffer.append(userInfoBean.getRemarks());
             String address = buffer.toString();
 
             PreferencesUtil.save(mContext, Constant.SP_SHOPADDRESS, address);
 
-            PreferencesUtil.save(mContext, Constant.SP_SHOPPHONE, resultBean.getData().getMobile());
+            PreferencesUtil.save(mContext, Constant.SP_SHOPPHONE, userInfoBean.getPhone());
         }
     }
 
@@ -587,10 +593,10 @@ public class PosMainActivity extends BaseAct implements ICallback {
      */
     public void getUserByUserId() {
         try {
+
             JSONObject json = new JSONObject();
-            json.put("userId", Constant.getUserId());
-//            showLoading(true);
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETUSERBYUSERID, UserInfoBean.class, resultBean -> {
+            json.put("id", Constant.getUserId());
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETUSERBYUSERID + "/" + Constant.getUserId(), CommonResult.class, resultBean -> {
                 onUserResult(resultBean);
             });
         } catch (Exception e) {
@@ -599,14 +605,14 @@ public class PosMainActivity extends BaseAct implements ICallback {
         }
     }
 
-    private void onUserResult(UserInfoBean result) {
+    private void onUserResult(CommonResult commonResult) {
 //        showLoading(false);
-        if (result != null) {
-            if (result != null) {
-
-                String name = result.getName();
-                tv_cashier_name.setText(name);
-                PreferencesUtil.save(mContext, Constant.SP_SHOPOWNER, name);
+        if (commonResult != null) {
+            if (commonResult.getResult() != null) {
+                UserInfoBean userInfoBean = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),UserInfoBean.class);
+                String username = userInfoBean.getNickName();
+                tv_cashier_name.setText(username);
+                PreferencesUtil.save(mContext, Constant.SP_USERNAME, username);
             }
         }
     }
@@ -638,7 +644,7 @@ public class PosMainActivity extends BaseAct implements ICallback {
             json.put("startTime", "");
             json.put("current", 1);
 
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.SELECTDEPOSITMONEYRECORD, RecordList.class, resultBean -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.SELECTDEPOSITMONEYRECORD, CommonResult.class, resultBean -> {
                 onRecordResult(resultBean);
             });
         } catch (Exception e) {
@@ -647,17 +653,17 @@ public class PosMainActivity extends BaseAct implements ICallback {
         }
     }
 
-    private void onRecordResult(RecordList relult) {
-        XLog.d(relult);
-        if (relult.getData() == null) {
+    private void onRecordResult(CommonResult commonResult) {
+        XLog.d(commonResult);
+        if (commonResult.getResult() == null) {
             showToast("没有数据哟");
             return;
         }
+        RecordList recordList = JsonParseUtils.parse(new Gson().toJson(commonResult.getResult(), Map.class), RecordList.class);
+        for (int i = 0; i < recordList.getRecords().size(); i++) {
 
-        for (int i = 0; i < relult.getData().getRecords().size(); i++) {
-
-            XLog.d("shop = " + relult.getData().getRecords().get(i).getShopId() + " amount = "
-                    + relult.getData().getRecords().get(i).getAmount());
+            XLog.d("shop = " + recordList.getRecords().get(i).getShopId() + " amount = "
+                    + recordList.getRecords().get(i).getAmount());
         }
     }
 

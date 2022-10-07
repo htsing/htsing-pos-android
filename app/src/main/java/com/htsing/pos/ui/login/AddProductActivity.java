@@ -14,12 +14,14 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatCheckBox;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.bean.Category;
 import com.htsing.pos.bean.AddProduct;
 import com.htsing.pos.constant.Constant;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.utils.PreferencesUtil;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.utils.CommonViewUtils;
@@ -35,11 +37,13 @@ import com.bumptech.glide.Glide;
 import com.king.zxing.util.CodeUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.hutool.json.JSONUtil;
 
 import android.widget.ArrayAdapter;
 
@@ -115,7 +119,7 @@ public class AddProductActivity extends BaseAct {
     ImageView iv_add_product_pic;
 
     //获取的 商品分类列表
-    private List<Category.DataBean> categoryList;
+    private List<Category> categoryList;
     private List<String> stringList;
     private List<String> unitList;
     private int categoryId;
@@ -192,8 +196,8 @@ public class AddProductActivity extends BaseAct {
 
                 for (int i = 0; i < categoryList.size(); i++) {
 
-                    if (cateID.equals(categoryList.get(i).getCategoryName())) {
-                        categoryId = categoryList.get(i).getCategoryId();
+                    if (cateID.equals(categoryList.get(i).getName())) {
+                        categoryId = categoryList.get(i).getId();
                         XLog.e(categoryId);
                     }
                 }
@@ -494,7 +498,7 @@ public class AddProductActivity extends BaseAct {
             JSONObject json = new JSONObject();
             json.put("shopId", "1");
 //            showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, Category.class, result -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, CommonResult.class, result -> {
                 onCateGoryResult(result);
             });
         } catch (Exception e) {
@@ -534,12 +538,13 @@ public class AddProductActivity extends BaseAct {
      * 根据店铺ID 获取 商品分类列表 的回调处方法
      * * @param result
      */
-    private void onCateGoryResult(Category result) {
-        categoryList = result.getData();
+    private void onCateGoryResult(CommonResult result) {
+        Category[] array = new Gson().fromJson(new Gson().toJson(result.getResult()),Category[].class);
+        List<Category> categoryList = Arrays.asList(array);
 //        showLoading(false);
         if (categoryList != null) {
             for (int i = 0; i < categoryList.size(); i++) {
-                stringList.add(categoryList.get(i).getCategoryName());
+                stringList.add(categoryList.get(i).getName());
             }
         }
     }

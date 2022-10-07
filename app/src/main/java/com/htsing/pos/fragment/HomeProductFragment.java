@@ -7,6 +7,7 @@ import android.widget.ListView;
 import android.text.Editable;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.CategoryListAdapter;
@@ -19,15 +20,19 @@ import com.htsing.pos.constant.Constant;
 import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.utils.CommonViewUtils;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
+import com.htsing.pos.utils.JsonParseUtils;
 import com.xw.repo.XEditText;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
+import cn.hutool.json.JSONUtil;
 
 public class HomeProductFragment extends HomeBaseFragment {
 
@@ -48,7 +53,7 @@ public class HomeProductFragment extends HomeBaseFragment {
     //首次加载获取的 商品列表
     private List<ProductList.DataBean> cardList;
     //首次加载获取的 商品分类列表
-    private List<Category.DataBean> categoryList;
+    private List<Category> categoryList;
 
     private BaseAct mBact;
 
@@ -118,7 +123,7 @@ public class HomeProductFragment extends HomeBaseFragment {
             JSONObject json = new JSONObject();
             json.put("shopId", Constant.getShopId());
             mBact.showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductList.class, stringResult -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, CommonResult.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -135,7 +140,7 @@ public class HomeProductFragment extends HomeBaseFragment {
             json.put("shopId", Constant.getShopId());
             json.put("prodName", prodName);
 //            mBact.showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, ProductList.class, stringResult -> {
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETPRODUCTS, CommonResult.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -151,11 +156,9 @@ public class HomeProductFragment extends HomeBaseFragment {
     private void onProductsResult(CommonResult commonResult) {
 //        mBact.showLoading(false);
         if (commonResult != null) {
-//            List<ProductList.DataBean> data = result.getResult();
-            ProductList productList = (ProductList) commonResult.getResult();
+            ProductList productList = JsonParseUtils.parse(new Gson().toJson(commonResult.getResult(), Map.class), ProductList.class);
             if (productList != null && productList.getRecords().size() > 0) {
                 ProductList.DataBean bean = productList.getRecords().get(0);
-                String shopName = bean.getShopName();
 
 //                goodsAdapter = new GoodsAdapter(mBact, data, 1);
 //                goodGridView.setAdapter(goodsAdapter);
@@ -172,7 +175,6 @@ public class HomeProductFragment extends HomeBaseFragment {
                         BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GRIDVIEW_ITEM_CLICK);
                         eventBean.setValue(bean1);
                         EventBus.getDefault().post(eventBean);
-
                         productSearchView.setText("");
                     }
                 });
@@ -190,34 +192,34 @@ public class HomeProductFragment extends HomeBaseFragment {
     private void initCataData() {
         try {
             JSONObject json = new JSONObject();
-            json.put("shopId", "1");
+            json.put("tenantId", Constant.getTenantId());
 //            showLoading();
-            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, Category.class, result -> {
-                onCateGoryResult(result);
+            easyGet(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETCATEGORY, CommonResult.class, stringResult -> {
+                onCateGoryResult(stringResult);
             });
         } catch (Exception e) {
             XLog.e(e);
         }
-
     }
 
     /**
      * 根据店铺ID 获取 商品分类列表 的回调处方法
      * * @param result
      */
-    private void onCateGoryResult(Category result) {
+    private void onCateGoryResult(CommonResult commonResult) {
 //        showLoading(false);
-        if (result != null) {
-            categoryList = result.getData();
+        XLog.i("result:");
+        if (commonResult != null) {
+            Category[] array = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),Category[].class);
+            List<Category> categoryList = Arrays.asList(array);
             cataListAdapter = new CategoryListAdapter(mBact, categoryList, 1);
             cataListView.setAdapter(cataListAdapter);
 
             cataListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                     //获取用户点击item对应的category ID；
-                    getProductByShopId(categoryList.get(position).getCategoryId());
+                    getProductByShopId(categoryList.get(position).getId());
                 }
             });
         }
@@ -238,7 +240,7 @@ public class HomeProductFragment extends HomeBaseFragment {
 //            json.put("shopId", Constant.getShopId());
 //            json.put("categoryId", categoryId);
 //            mBact.showLoading();
-            easyGet(json, url, ProductList.class, stringResult -> {
+            easyGet(json, url, CommonResult.class, stringResult -> {
                 onProductsResult(stringResult);
             });
         } catch (Exception e) {
@@ -281,8 +283,6 @@ public class HomeProductFragment extends HomeBaseFragment {
             ProductList.DataBean bean = data.get(0);
 
             if (bean != null) {
-                String shopName = bean.getShopName();
-                XLog.d("shopName   = " + shopName);
                 //扫码枪识别商品 直接加入购物车，由 homeCartFragment 处理
                 BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GRIDVIEW_ITEM_CLICK);
                 eventBean.setValue(bean);

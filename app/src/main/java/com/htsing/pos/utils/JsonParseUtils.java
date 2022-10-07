@@ -191,21 +191,21 @@ public class JsonParseUtils {
             getRequest.headers("Content-Type", "application/json");
         }
         getRequest.params(getMap(requestParams))
-                .execute(new SimpleCallBack<String>() {
-                    @Override
-                    public void onError(ApiException e) {
-                        XLog.e("ApiException e   " + e.getDisplayMessage());
-                        CommonUtils.showToast(act, "网络错误");
-                        act.showLoading(false);
-                        PgyerSDKManager.reportException(e);
-                    }
-                    @Override
-                    public void onSuccess(String s) {
-                        act.showLoading(false);
-                        XLog.json(s);
-                        commonResult(s, cls, listener);
-                    }
-                });
+        .execute(new SimpleCallBack<String>() {
+            @Override
+            public void onError(ApiException e) {
+                XLog.e("ApiException e   " + e.getDisplayMessage());
+                CommonUtils.showToast(act, "网络错误");
+                act.showLoading(false);
+                PgyerSDKManager.reportException(e);
+            }
+            @Override
+            public void onSuccess(String s) {
+                act.showLoading(false);
+                XLog.json(s);
+                commonResult(s, cls, listener);
+            }
+        });
     }
 
     public static <T> void commonResult(String s, Class<T> cls, OnRequestSuccess<T> listener) {
@@ -237,7 +237,5 @@ public class JsonParseUtils {
             String appToken = "bearer" + accessToken;
             PreferencesUtil.save(act, Constant.SP_TOKEN, appToken);
         }
-
     }
-
 }

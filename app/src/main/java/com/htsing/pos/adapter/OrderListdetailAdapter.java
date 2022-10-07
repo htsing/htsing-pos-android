@@ -29,7 +29,7 @@ public class OrderListdetailAdapter extends BaseAdapter {
     private ModifyCountInterface modifyCountInterface;
 
     private boolean isMember = false;
-    private HomeMemberInfo.DataBean memberInfoBean;
+    private HomeMemberInfo memberInfoBean;
 
     private int productNum = 0;
     private int preProductNum = 0;
@@ -41,7 +41,7 @@ public class OrderListdetailAdapter extends BaseAdapter {
     }
 
 
-    public void setMember(HomeMemberInfo.DataBean memberInfoBean) {
+    public void setMember(HomeMemberInfo memberInfoBean) {
         this.memberInfoBean = memberInfoBean;
         notifyDataSetChanged();
     }

@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import com.elvishew.xlog.XLog;
+import com.google.gson.Gson;
 import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.OrderListdetailAdapter;
@@ -109,7 +110,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
     private OrderPrintUtils printUtils;
 
     //存储会员信息的对象
-    private HomeMemberInfo.DataBean memberInfoBean;
+    private HomeMemberInfo memberInfoBean;
 
     @Override
     public int getLayout() {
@@ -512,7 +513,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
 
             String stringUrl = buffer.toString();
 
-            easyPost(json, stringUrl, HomeMemberInfo.class, result -> {
+            easyPost(json, stringUrl, CommonResult.class, result -> {
                 onMemberResult(result);
             });
         } catch (Exception e) {
@@ -522,15 +523,16 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
 
     }
 
-    private void onMemberResult(HomeMemberInfo relust) {
-        if (relust.getData() == null) {
+    private void onMemberResult(CommonResult commonResult) {
+        if (commonResult.getResult() == null) {
             showToast("会员信息为空");
             return;
         } else {
+            HomeMemberInfo homeMemberInfo = new Gson().fromJson(new Gson().toJson(commonResult.getResult()),HomeMemberInfo.class);
 //            BaseEventBean eventBean = new BaseEventBean(BaseEventBean.TYPE_GOTO_MEMBER_FRAGMENT);
 //            eventBean.setValue(relust.getData().get(0));
 //            EventBus.getDefault().post(eventBean);
-            memberInfoBean = relust.getData().get(0);
+            memberInfoBean = homeMemberInfo;
             if (memberInfoBean != null) {
                 orderListActivity.paySuccessToPrinter(printUtils.formatGoods(relustOrder), relustOrder.getPayType(), relustOrder, memberInfoBean);
             }

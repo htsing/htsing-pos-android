@@ -8,7 +8,7 @@ import com.htsing.pos.App;
  */
 
 public class GlobalServerUrl {
-    public static final String DEBUG_URL = "http://192.168.1.7:9999";  //开发
+    public static final String DEBUG_URL = "http://192.168.31.89:9999";  //开发
     public static final String UPDATE_VERSION_URL = "https://wise.hbyjtech.com/";  //自动更新
     private static final String RELEASE_URL = "http://gateway.huapustore.com";  //正式
     public static final String BASE_URL = App.debug ? DEBUG_URL : RELEASE_URL;
@@ -31,7 +31,7 @@ public class GlobalServerUrl {
     //根据条形码获取某一个商品
     public static final String GETPRODUCTBYSHOPID = "/app/homeData/getProductByShopId";
     //获取产品分类
-    public static final String GETCATEGORY = "/mall-admin/goodscategory/page";
+    public static final String GETCATEGORY = "/mall-admin/goodscategory/getAllList";
 
     public static final String CONFIRMORDERURL = "/app/order/confirmOrder";
     //提交订单
@@ -57,7 +57,7 @@ public class GlobalServerUrl {
     public static final String APPSHOPDETAIL = "/upms/organ";
     public static final String USERSHIFTSTATISTICS = "/app/appCashRegisterSystemUser/userShiftStatistics";
     public static final String ADDPRODUCT = "/app/appProduct/addProduct";
-    public static final String GETUSERBYUSERID = "/upms/user/info";
+    public static final String GETUSERBYUSERID = "/upms/user";
 
     public static final String ORDERBUCHA = "/app/pay/bucha";
     public static final String SELECTDEPOSITMONEYRECORD = "/app/depositMoney/selectDepositMoneyRecord";

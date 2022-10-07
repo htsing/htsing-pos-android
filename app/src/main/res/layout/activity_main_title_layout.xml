@@ -40,9 +40,9 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="可可蛋糕"
+                android:text="华铺超市"
                 android:textColor="#ffffffff"
-                android:textSize="15sp" />
+                android:textSize="30sp" />
 
         </LinearLayout>
 
@@ -56,13 +56,13 @@
                 android:layout_height="wrap_content"
                 android:text="收银员："
                 android:textColor="#ffffffff"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_cashier_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="曹梦秋"
+                android:text="管理员"
                 android:textColor="#ffffffff"
                 android:textSize="15sp" />
         </LinearLayout>

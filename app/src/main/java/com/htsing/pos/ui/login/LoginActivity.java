@@ -251,14 +251,16 @@ public class LoginActivity extends BaseAct {
             XLog.i("accessToken = " + accessToken);
             XLog.i("LoginInfoBean = " + loginInfoBean.toString());
             String shopId = String.valueOf(loginInfoBean.getUserInfo().getShopId());
+            String tenantId = String.valueOf(loginInfoBean.getUserInfo().getTenantId());
             String userId = String.valueOf(loginInfoBean.getUserInfo().getId());
             if (!TextUtils.isEmpty(accessToken)) {
                 //保持数据到文件里面
                 String appToken = "Bearer " + accessToken;
                 PreferencesUtil.save(mContext, Constant.SP_TOKEN, appToken);
                 PreferencesUtil.save(mContext, Constant.SP_SHOPID, shopId);
+                PreferencesUtil.save(mContext, Constant.SP_TENANTID, tenantId);
                 PreferencesUtil.save(mContext, Constant.SP_USERID, userId);
-                PreferencesUtil.save(mContext, Constant.SP_USERNAME, loginInfoBean.getUserInfo().getName());
+                PreferencesUtil.save(mContext, Constant.SP_USERNAME, loginInfoBean.getUserInfo().getUsername());
                 PreferencesUtil.save(mContext, Constant.SP_SHOPNAME, loginInfoBean.getUserInfo().getShopName());
                 PreferencesUtil.save(mContext, Constant.SP_TENANTNAME, loginInfoBean.getUserInfo().getTenantName());
                 PreferencesUtil.save(mContext, Constant.SP_AVATAR, loginInfoBean.getUserInfo().getAvatar());
@@ -272,7 +274,7 @@ public class LoginActivity extends BaseAct {
 //                    //保持数据到文件里面
 //                }
 
-                Intent intent = new Intent(getApplicationContext(), PosMainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), PosActivity.class);
                 startActivity(intent);
                 finish();//关闭当前活动
 

@@ -16,18 +16,18 @@ import java.util.List;
 public class CategoryListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<Category.DataBean> list;
+    private List<Category> list;
     private int mFlag;
     private int selectPosition = -1;
 
 
-    public CategoryListAdapter(Context context, List<Category.DataBean> lvBeans, int flag) {
+    public CategoryListAdapter(Context context, List<Category> lvBeans, int flag) {
         this.mContext = context;
         this.list = lvBeans;
         this.mFlag = flag;
     }
 
-    public CategoryListAdapter(List<Category.DataBean> var1) {
+    public CategoryListAdapter(List<Category> var1) {
         this.list = var1;
     }
 
@@ -67,7 +67,7 @@ public class CategoryListAdapter extends BaseAdapter {
         ViewHold hold = new ViewHold();
         convertView = LayoutInflater.from(mContext).inflate(R.layout.cata_title_list_layout, null);
         hold.txCataName = (TextView) convertView.findViewById(R.id.tv_cata_name);
-        hold.txCataName.setText(list.get(position).getCategoryName());
+        hold.txCataName.setText(list.get(position).getName());
 
         return convertView;
     }
