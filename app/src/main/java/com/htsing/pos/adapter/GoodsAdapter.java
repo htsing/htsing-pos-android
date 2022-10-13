@@ -63,24 +63,21 @@ public class GoodsAdapter extends BaseAdapter {
             hold.ivPhoto = (ImageView) convertView.findViewById(R.id.iv_photo);
             hold.tvName = (TextView) convertView.findViewById(R.id.tv_name);
             hold.tvPrice = (TextView) convertView.findViewById(R.id.tv_price);
-//            hold.tvUnit = (TextView) convertView.findViewById(R.id.tv_unit);
             hold.tvStock = (TextView) convertView.findViewById(R.id.tv_stock);
             convertView.setTag(hold);
         } else {
             hold = (ViewHold) convertView.getTag();
         }
 //        hold.ivPhoto.setImageResource(list.get(position).getImgId());
-//        hold.tvName.setText(list.get(position).getName());
-//        hold.tvPrice.setText(list.get(position).getPrice());
 
         Glide
                 .with(mContext)
-                .load(list.get(position).getPicUrls())
+                .load(list.get(position).getPicUrls()[0])
                 .placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(hold.ivPhoto);
 
 
         hold.tvName.setText(list.get(position).getName());
-        hold.tvPrice.setText(list.get(position).getPriceRetail()+"");
+        hold.tvPrice.setText(list.get(position).getPriceRetail()+ "/" +list.get(position).getUnit());
         hold.tvStock.setText(list.get(position).getPriceVip()+"");
 
 //        switch (mFlag) {
@@ -102,7 +99,6 @@ public class GoodsAdapter extends BaseAdapter {
         private ImageView ivPhoto;
         private TextView tvName;
         private TextView tvPrice;
-//        private TextView tvUnit;
         private TextView tvStock;
     }
 

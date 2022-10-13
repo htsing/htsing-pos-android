@@ -115,7 +115,7 @@ public class OrderListActivity extends BaseAct {
         transaction.commit();
     }
 
-    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo memberInfoBean) {
+    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.RecordsBean orderBean, HomeMemberInfo memberInfoBean) {
         XLog.d(goods_data);
         printerPresenter.setRelustOrder(orderBean);
         printerPresenter.setMemberInfoBean(memberInfoBean);

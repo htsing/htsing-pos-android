@@ -4,7 +4,7 @@ import com.htsing.pos.easyhttp.CommonResult;
 
 import java.io.Serializable;
 
-public class AddProduct extends CommonResult {
+public class AddProduct  {
 
 
     /**
@@ -12,62 +12,6 @@ public class AddProduct extends CommonResult {
      * resultMsg : null
      */
 
-    private DataBean data;
-
-    public DataBean getData() {
-        return data;
-    }
-
-    public void setData(DataBean data) {
-        this.data = data;
-    }
-
-    public static class DataBean implements Serializable {
-        /**
-         * prodId : 1460
-         * shopId : 116
-         * prodName : 小二啷当面包
-         * prodNamePy : XE啷DMB
-         * oriPrice : null
-         * price : 55.0
-         * brief : null
-         * pic : null
-         * imgs : null
-         * status : 1
-         * categoryId : 293
-         * soldNum : null
-         * totalStocks : 1000
-         * deliveryMode : null
-         * deliveryTemplateId : null
-         * createTime : 2021-03-05 11:25:00
-         * updateTime : 2021-03-05 11:25:00
-         * content : null
-         * putawayTime : 2021-03-05 11:25:00
-         * version : null
-         * isSpread : null
-         * isSignboard : null
-         * skuList : null
-         * categoryList : null
-         * shopName : null
-         * tagList : null
-         * activityPrice : null
-         * activityId : null
-         * activityTimes : null
-         * activityTimesFlag : 0
-         * activityOrderTimes : 0
-         * activityOrderFlag : 0
-         * isOnlySelfmention : null
-         * isHotProd : 0
-         * isGroupProd : null
-         * saleType : 2
-         * barCode : 318155367245
-         * prodType : null
-         * count : 0
-         * phoneNumber : null
-         * unit : 盒
-         * vipDiscount : 0
-         * vipPrice : null
-         */
 
         private int prodId;
         private int shopId;
@@ -456,5 +400,5 @@ public class AddProduct extends CommonResult {
         public void setVipPrice(Object vipPrice) {
             this.vipPrice = vipPrice;
         }
-    }
+
 }

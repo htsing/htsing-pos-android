@@ -172,7 +172,7 @@
             android:id="@+id/tv_home_cart_temp_order"
             android:layout_width="130px"
             android:layout_height="74px"
-            android:layout_marginLeft="106dp"
+            android:layout_marginLeft="@dimen/dp_10"
             android:background="@drawable/act_main_left_text_shape"
             android:gravity="center_horizontal|center_vertical"
             android:text="挂单"

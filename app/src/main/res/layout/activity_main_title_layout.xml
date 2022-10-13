@@ -8,14 +8,16 @@
 
     <LinearLayout
         android:id="@+id/ly_logo_info"
-        android:layout_width="374px"
-        android:layout_height="136px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@mipmap/logo"
+            android:layout_width="80px"
+            android:layout_height="80px"
+            android:layout_marginLeft="@dimen/sp10"
+            android:layout_marginTop="@dimen/sp15"
+            android:background="@mipmap/tubiao"
             android:scaleType="centerCrop" />
 
     </LinearLayout>

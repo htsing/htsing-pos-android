@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="893px"
     android:layout_height="1080px"
     android:orientation="horizontal">
@@ -73,7 +74,8 @@
                 android:paddingRight="@dimen/x20"
                 android:singleLine="true"
                 android:textSize="@dimen/sp23"
-                app:x_clearDrawable="@mipmap/clear_input" />
+                app:x_clearDrawable="@mipmap/clear_input"
+                tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
         </LinearLayout>
 
         <LinearLayout
@@ -373,7 +375,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="打印小票"
-                android:theme="@style/MyCheckBox" />
+                android:theme="@style/MyCheckBox"
+                tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/tv_cancel_cash_order"

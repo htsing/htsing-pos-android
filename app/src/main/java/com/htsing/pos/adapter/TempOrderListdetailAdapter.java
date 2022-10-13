@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.htsing.pos.R;
 import com.htsing.pos.bean.HomeMemberInfo;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean.OrderItemsBean;
 import com.htsing.pos.callback.ModifyCountInterface;
 import com.htsing.pos.utils.BigDecimalUtils;
 

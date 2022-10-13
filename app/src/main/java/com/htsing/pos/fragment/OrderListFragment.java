@@ -17,14 +17,16 @@ import com.htsing.pos.adapter.holder.BaseListVH;
 import com.htsing.pos.adapter.holder.OrderListHolder;
 import com.htsing.pos.base.IBaseFragmentList;
 import com.htsing.pos.bean.HomeMemberInfo;
+import com.htsing.pos.bean.ProductList;
 import com.htsing.pos.bean.ShopOrderDetail;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.ui.login.OrderListActivity;
 import com.htsing.pos.utils.CommonUtils;
 import com.htsing.pos.utils.CommonViewUtils;
+import com.htsing.pos.utils.JsonParseUtils;
 import com.htsing.pos.utils.OrderPrintUtils;
 import com.htsing.pos.utils.PreferencesUtil;
 import com.xw.repo.XEditText;
@@ -34,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -105,7 +108,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
     private OrderListActivity orderListActivity;
     private int current = 1;
 
-    private RecordsBean relustOrder;  //listView的点击以后的订单对象
+    private ShopOrderDetail.RecordsBean relustOrder;  //listView的点击以后的订单对象
 
     private OrderPrintUtils printUtils;
 
@@ -242,7 +245,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
             }
 
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETALLORDERBYSHOPID, ShopOrderDetail.class, stringResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETALLORDERBYSHOPID, CommonResult.class, stringResult -> {
                 onOrderResult(stringResult);
             });
         } catch (Exception e) {
@@ -278,35 +281,36 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
     private void onOrderSearchResult(ShopOrderDetail relust) {
         mBact.showLoading(false);
 
-        if (relust.getData().getRecords() == null || relust.getData().getRecords().size() == 0) {
+        if (relust.getRecords() == null || relust.getRecords().size() == 0) {
             showToast("没有订单数据 ");
             return;
         }
-        mdataList.addAll(relust.getData().getRecords());
-        setSearchData(relust.getData().getRecords());
-        initItemView(relust.getData().getRecords().get(0));
+        mdataList.addAll(relust.getRecords());
+        setSearchData(relust.getRecords());
+        initItemView(relust.getRecords().get(0));
     }
 
-    private void onOrderResult(ShopOrderDetail relust) {
+    private void onOrderResult(CommonResult commonResult) {
         mBact.showLoading(false);
 
 
-        if (relust == null || relust.getData().getRecords() == null || relust.getData().getRecords().size() == 0) {
+        ShopOrderDetail shopOrderDetail = JsonParseUtils.parse(new Gson().toJson(commonResult.getResult(), Map.class), ShopOrderDetail.class);
+        if (commonResult == null || shopOrderDetail.getRecords() == null || shopOrderDetail.getRecords().size() == 0) {
             showToast("没有订单数据 ");
             return;
         }
-        mdataList.addAll(relust.getData().getRecords());
+        mdataList.addAll(shopOrderDetail.getRecords());
 
-        this.relustOrder = relust.getData().getRecords().get(0);
+        this.relustOrder = shopOrderDetail.getRecords().get(0);
 
-        current = relust.getData().getCurrent();
+        current = shopOrderDetail.getCurrent();
 
-        setData(relust.getData().getRecords());
+        setData(shopOrderDetail.getRecords());
 
-        initItemView(relust.getData().getRecords().get(0));
+        initItemView(shopOrderDetail.getRecords().get(0));
     }
 
-    private void initItemView(RecordsBean bean) {
+    private void initItemView(ShopOrderDetail.RecordsBean bean) {
         if (bean == null) {
             return;
         }
@@ -405,7 +409,7 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
 
 
     @Override
-    public void onHandleItemClick(RecordsBean item) {
+    public void onHandleItemClick(ShopOrderDetail.RecordsBean item) {
         if (item == null) {
             return;
         }
@@ -442,11 +446,11 @@ public class OrderListFragment extends IBaseFragmentList implements OrderListHol
             json.put("orderNumber", relustOrder.getOrderNumber());//订单编号
 
             //退款的产品
-            List<ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean> orderItems = relustOrder.getOrderItems();
+            List<ShopOrderDetail.RecordsBean.OrderItemsBean> orderItems = relustOrder.getOrderItems();
             JSONArray jsonArray = new JSONArray();
             if (orderItems != null) {
 
-                for (ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean bean : orderItems) {
+                for (ShopOrderDetail.RecordsBean.OrderItemsBean bean : orderItems) {
 //                    ConfirmOrderBean.OrderEntity orderEntity = comfirmOrderList.get(i);
 
                     JSONObject orderBean = new JSONObject();

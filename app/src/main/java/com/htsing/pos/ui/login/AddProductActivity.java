@@ -376,7 +376,7 @@ public class AddProductActivity extends BaseAct {
 
             }
             showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, AddProduct.class, resultBean -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, CommonResult.class, resultBean -> {
                 onProductResult(resultBean);
             });
         } catch (Exception e) {
@@ -409,7 +409,7 @@ public class AddProductActivity extends BaseAct {
             json.put("shopId", Constant.getShopId());
             json.put("userId", Constant.getUserId());
             showLoading(true);
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, AddProduct.class, resultBean -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.ADDPRODUCT, CommonResult.class, resultBean -> {
                 onProductResult(resultBean);
             });
         } catch (Exception e) {
@@ -417,15 +417,13 @@ public class AddProductActivity extends BaseAct {
         }
     }
 
-    private void onProductResult(AddProduct resultBean) {
+    private void onProductResult(CommonResult resultBean) {
         showLoading(false);
         if (resultBean == null) {
             return;
         } else {
-            if (resultBean.getData() != null) {
-
+            if (resultBean.getResult() != null) {
                 showToast("商品添加成功");
-
                 et_product_name.setText("");
                 et_product_price.setText("");
                 et_product_vip_price.setText("");

@@ -8,7 +8,7 @@ import com.htsing.pos.App;
  */
 
 public class GlobalServerUrl {
-    public static final String DEBUG_URL = "http://192.168.31.89:9999";  //开发
+    public static final String DEBUG_URL = "http://192.168.1.7:9999";  //开发
     public static final String UPDATE_VERSION_URL = "https://wise.hbyjtech.com/";  //自动更新
     private static final String RELEASE_URL = "http://gateway.huapustore.com";  //正式
     public static final String BASE_URL = App.debug ? DEBUG_URL : RELEASE_URL;

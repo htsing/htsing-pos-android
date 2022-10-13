@@ -16,7 +16,7 @@ import com.htsing.pos.R;
 import com.htsing.pos.bean.HomeMemberInfo;
 import com.htsing.pos.bean.MenuBean;
 import com.htsing.pos.bean.Recharge;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.utils.BigDecimalUtils;
 import com.htsing.pos.utils.BitmapUtils;

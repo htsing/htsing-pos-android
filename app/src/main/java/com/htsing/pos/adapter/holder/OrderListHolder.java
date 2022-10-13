@@ -23,7 +23,7 @@ import android.content.Context;
 import com.htsing.pos.constant.Constant;
 import com.htsing.pos.fragment.OrderListFragment;
 
-public class OrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.RecordsBean> {
+public class OrderListHolder extends BaseListVH<ShopOrderDetail.RecordsBean> {
 
 
     private ListViewItemClickInterface itemClickInterface;
@@ -52,7 +52,7 @@ public class OrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.Records
 
 
     @Override
-    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetail.DataBean.RecordsBean item) {
+    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetail.RecordsBean item) {
         if (item == null) {
             return;
         }
@@ -168,6 +168,6 @@ public class OrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.Records
     }
 
     public interface ListViewItemClickInterface {
-        void onHandleItemClick(ShopOrderDetail.DataBean.RecordsBean item);
+        void onHandleItemClick(ShopOrderDetail.RecordsBean item);
     }
 }

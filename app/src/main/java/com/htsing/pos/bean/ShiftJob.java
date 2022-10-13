@@ -5,7 +5,7 @@ import com.htsing.pos.easyhttp.CommonResult;
 import java.io.Serializable;
 import java.util.List;
 
-public class ShiftJob extends CommonResult {
+public class ShiftJob {
 
 
     /**
@@ -13,30 +13,6 @@ public class ShiftJob extends CommonResult {
      * resultMsg : null
      */
 
-    private DataBean data;
-
-    public static class DataBean implements Serializable {
-        /**
-         * loginTime : null
-         * totalSales : 0.0
-         * cashSales : 0.0
-         * umsPaySales : 0.0
-         * appTransactionRefunds : []
-         * orders : []
-         * userDeposits : []
-         * userDepositAmount : 0.0
-         * userDepositCount : 0
-         * dealCount : null
-         * cashCount : null
-         * umsCount : null
-         * appTransactionRefundAmount : 0.0
-         * appTransactionRefundCashAmount : 0.0
-         * appTransactionRefundUmsAmount : 0.0
-         * appTransactionRefundCount : 0
-         * appTransactionRefundCashCount : 0
-         * appTransactionRefundUmsCount : 0
-         * accountSales : null
-         */
 
         private Object loginTime;
         private double totalSales;
@@ -210,5 +186,5 @@ public class ShiftJob extends CommonResult {
         public void setUserDeposits(List<?> userDeposits) {
             this.userDeposits = userDeposits;
         }
-    }
+
 }

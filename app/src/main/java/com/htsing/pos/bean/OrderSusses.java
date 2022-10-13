@@ -2,113 +2,98 @@ package com.htsing.pos.bean;
 
 import com.htsing.pos.easyhttp.CommonResult;
 
-public class OrderSusses extends CommonResult {
+public class OrderSusses {
+    /**
+     * actualTotal : 59.8
+     * total : null
+     * totalCount : 2
+     * orderReduce : 0
+     * userAddr : null
+     * shopCartOrders : null
+     * coupons : null
+     * couponRecords : null
+     * orderNumber : 1354240633233084416
+     */
 
-    private OrderInfo data;
+    private double actualTotal;
+    private Object total;
+    private int totalCount;
+    private int orderReduce;
+    private Object userAddr;
+    private Object shopCartOrders;
+    private Object coupons;
+    private Object couponRecords;
+    private String orderNumber;
 
-    public OrderInfo getData() {
-        return data;
+    public double getActualTotal() {
+        return actualTotal;
     }
 
-    public void setData(OrderInfo data) {
-        this.data = data;
+    public void setActualTotal(double actualTotal) {
+        this.actualTotal = actualTotal;
     }
 
-    public static class OrderInfo{
+    public Object getTotal() {
+        return total;
+    }
 
-        /**
-         * actualTotal : 59.8
-         * total : null
-         * totalCount : 2
-         * orderReduce : 0
-         * userAddr : null
-         * shopCartOrders : null
-         * coupons : null
-         * couponRecords : null
-         * orderNumber : 1354240633233084416
-         */
+    public void setTotal(Object total) {
+        this.total = total;
+    }
 
-        private double actualTotal;
-        private Object total;
-        private int totalCount;
-        private int orderReduce;
-        private Object userAddr;
-        private Object shopCartOrders;
-        private Object coupons;
-        private Object couponRecords;
-        private String orderNumber;
+    public int getTotalCount() {
+        return totalCount;
+    }
 
-        public double getActualTotal() {
-            return actualTotal;
-        }
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
-        public void setActualTotal(double actualTotal) {
-            this.actualTotal = actualTotal;
-        }
+    public int getOrderReduce() {
+        return orderReduce;
+    }
 
-        public Object getTotal() {
-            return total;
-        }
+    public void setOrderReduce(int orderReduce) {
+        this.orderReduce = orderReduce;
+    }
 
-        public void setTotal(Object total) {
-            this.total = total;
-        }
+    public Object getUserAddr() {
+        return userAddr;
+    }
 
-        public int getTotalCount() {
-            return totalCount;
-        }
+    public void setUserAddr(Object userAddr) {
+        this.userAddr = userAddr;
+    }
 
-        public void setTotalCount(int totalCount) {
-            this.totalCount = totalCount;
-        }
+    public Object getShopCartOrders() {
+        return shopCartOrders;
+    }
 
-        public int getOrderReduce() {
-            return orderReduce;
-        }
+    public void setShopCartOrders(Object shopCartOrders) {
+        this.shopCartOrders = shopCartOrders;
+    }
 
-        public void setOrderReduce(int orderReduce) {
-            this.orderReduce = orderReduce;
-        }
+    public Object getCoupons() {
+        return coupons;
+    }
 
-        public Object getUserAddr() {
-            return userAddr;
-        }
+    public void setCoupons(Object coupons) {
+        this.coupons = coupons;
+    }
 
-        public void setUserAddr(Object userAddr) {
-            this.userAddr = userAddr;
-        }
+    public Object getCouponRecords() {
+        return couponRecords;
+    }
 
-        public Object getShopCartOrders() {
-            return shopCartOrders;
-        }
+    public void setCouponRecords(Object couponRecords) {
+        this.couponRecords = couponRecords;
+    }
 
-        public void setShopCartOrders(Object shopCartOrders) {
-            this.shopCartOrders = shopCartOrders;
-        }
+    public String getOrderNumber() {
+        return orderNumber;
+    }
 
-        public Object getCoupons() {
-            return coupons;
-        }
-
-        public void setCoupons(Object coupons) {
-            this.coupons = coupons;
-        }
-
-        public Object getCouponRecords() {
-            return couponRecords;
-        }
-
-        public void setCouponRecords(Object couponRecords) {
-            this.couponRecords = couponRecords;
-        }
-
-        public String getOrderNumber() {
-            return orderNumber;
-        }
-
-        public void setOrderNumber(String orderNumber) {
+    public void setOrderNumber(String orderNumber) {
             this.orderNumber = orderNumber;
         }
-    }
-
 }

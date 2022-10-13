@@ -279,7 +279,7 @@ public class MainActivity extends BaseAct  {
             jsonArray.put(orderBean);
             json.put("productList", jsonArray);
             showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, OrderSusses.class, orderResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, CommonResult.class, orderResult -> {
                 onconfirmOrderResult(orderResult);
             });
         } catch (Exception e) {
@@ -294,12 +294,13 @@ public class MainActivity extends BaseAct  {
      *
      * @param result
      */
-    private void onconfirmOrderResult(OrderSusses result) {
+    private void onconfirmOrderResult(CommonResult result) {
         showLoading(false);
-        if (result.getData() != null) {
-            String orderNum = result.getData().getOrderNumber();
-            orderSussesBean = result;
-            double actualTotal = result.getData().getActualTotal();
+        if (result.getResult() != null) {
+            OrderSusses orderSusses = new Gson().fromJson(new Gson().toJson(result.getResult()),OrderSusses.class);
+            String orderNum = orderSusses.getOrderNumber();
+            orderSussesBean = orderSusses;
+            double actualTotal = orderSusses.getActualTotal();
             XLog.d("orderNum " + orderNum);
             XLog.d("actualTotal " + actualTotal);
             showToast("解析成功，可以支付");
@@ -313,7 +314,7 @@ public class MainActivity extends BaseAct  {
         try {
 
             StringBuilder builder = new StringBuilder(unionPayUrl);
-            builder.append("orderNumber=" + orderSussesBean.getData().getOrderNumber());
+            builder.append("orderNumber=" + orderSussesBean.getOrderNumber());
             builder.append("&payMoney=" + 1.11);
             builder.append("&payCode=" + payCode);
 

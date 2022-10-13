@@ -5,19 +5,9 @@ import com.htsing.pos.easyhttp.CommonResult;
 import java.util.Date;
 import java.util.List;
 
-public class ShopOrder extends CommonResult {
+public class ShopOrder {
 
-    private OrderData data;
 
-    public OrderData getData() {
-        return data;
-    }
-
-    public void setData(OrderData data) {
-        this.data = data;
-    }
-
-    public static class OrderData {
 
         private int current;
         private int pages;
@@ -47,7 +37,7 @@ public class ShopOrder extends CommonResult {
         public void setRecords(List<OrderDetailed> records) {
             this.records = records;
         }
-    }
+
 
 
     public static class OrderDetailed {

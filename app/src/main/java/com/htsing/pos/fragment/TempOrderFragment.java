@@ -2,7 +2,11 @@ package com.htsing.pos.fragment;
 
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.htsing.pos.bean.ProductList;
+import com.htsing.pos.easyhttp.CommonResult;
 import com.htsing.pos.ui.login.PosActivity;
+import com.htsing.pos.utils.JsonParseUtils;
 import com.pgyer.pgyersdk.PgyerSDKManager;
 
 import com.elvishew.xlog.XLog;
@@ -10,7 +14,7 @@ import com.htsing.pos.BaseAct;
 import com.htsing.pos.R;
 import com.htsing.pos.adapter.holder.BaseListVH;
 import com.htsing.pos.adapter.holder.TempOrderListHolder;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean;
 import com.htsing.pos.base.fragment.BaseEventBean;
 import com.htsing.pos.bean.ShopOrderDetail;
 import com.htsing.pos.constant.Constant;
@@ -26,6 +30,8 @@ import butterknife.BindView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Map;
+
 public class TempOrderFragment extends IBaseFragmentList implements TempOrderListHolder.ListViewItemClickInterface {
 
 
@@ -39,7 +45,7 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
     private TempOrderListHolder holder;
     private int current = 1;
 
-    private RecordsBean relustOrder;  //listView的点击以后的订单对象
+    private ShopOrderDetail.RecordsBean relustOrder;  //listView的点击以后的订单对象
 
     @Override
     public int getLayout() {
@@ -106,7 +112,7 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
             }
 
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETTOPAIDORDER, ShopOrderDetail.class, stringResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.GETTOPAIDORDER, CommonResult.class, stringResult -> {
                 onOrderResult(stringResult);
             });
         } catch (Exception e) {
@@ -114,11 +120,11 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
         }
     }
 
-    private void onOrderResult(ShopOrderDetail relust) {
+    private void onOrderResult(CommonResult commonResult) {
         mBact.showLoading(false);
 
         try {
-            if (relust == null) {
+            if (commonResult == null) {
                 setAdapterEmptyView();
                 return;
             }
@@ -126,20 +132,22 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
             PgyerSDKManager.reportException(e);
         }
 
-        if (relust.getData() == null) {
+        if (commonResult.getResult() == null) {
             showToast("没有挂单数据 ");
             return;
         } else {
 
-            if (relust.getData().getRecords() != null && relust.getData().getRecords().size() > 0) {
+            ShopOrderDetail shopOrderDetail = JsonParseUtils.parse(new Gson().toJson(commonResult.getResult(), Map.class), ShopOrderDetail.class);
 
-                if (relust.getData().getRecords().size() > 0) {
+            if (shopOrderDetail.getRecords() != null && shopOrderDetail.getRecords().size() > 0) {
 
-                    this.relustOrder = relust.getData().getRecords().get(0);
+                if (shopOrderDetail.getRecords().size() > 0) {
 
-                    current = relust.getData().getCurrent();
+                    this.relustOrder = shopOrderDetail.getRecords().get(0);
 
-                    setData(relust.getData().getRecords());
+                    current = shopOrderDetail.getCurrent();
+
+                    setData(shopOrderDetail.getRecords());
 
                 }
 
@@ -149,7 +157,7 @@ public class TempOrderFragment extends IBaseFragmentList implements TempOrderLis
     }
 
     @Override
-    public void onHandleItemClick(RecordsBean item) {
+    public void onHandleItemClick(ShopOrderDetail.RecordsBean item) {
         if (item == null) {
             return;
         }

@@ -198,7 +198,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20px"
-        android:text="鄂ICP备18006287号 湖北小二啷当生物科技有限公司"
+        android:text="闽ICP备180286732号 福建华铺科技有限公司"
         android:textColor="#FF666666"
         android:textSize="9sp" />
 </RelativeLayout>

@@ -8,8 +8,10 @@ import com.htsing.pos.utils.CommonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Data;
 
-public class Login extends CommonResult {
+@Data
+public class Login {
     /**
      * data : {"createTime":null,"updatedTime":null,"startTime":null,"endTime":null,"page":1,"pageSize":10,"id":8,"userName":"shizhen","realName":"AAA",
      * "password":null,"policeId":null,"departmentId":4,"url":"","phone":"","email":null,"description":null,"ip":"119.96.48.175","roleId":2,"roleIds":[2],
@@ -32,72 +34,7 @@ public class Login extends CommonResult {
      * "privacyFlag":null,"quota":null,"loginStatus":null,"ownedAddressNames":null,"faces":null}
      */
 
-    private DataBean data;
 
-    public DataBean getData() {
-        return data;
-    }
-
-    public void setData(DataBean data) {
-        this.data = data;
-    }
-
-    public static class DataBean {
-        /**
-         * createTime : null
-         * updatedTime : null
-         * startTime : null
-         * endTime : null
-         * page : 1
-         * pageSize : 10
-         * id : 8
-         * userName : shizhen
-         * realName : AAA
-         * password : null
-         * policeId : null
-         * departmentId : 4
-         * url :
-         * phone :
-         * email : null
-         * description : null
-         * ip : 119.96.48.175
-         * roleId : 2
-         * roleIds : [2]
-         * roleName : 管理员
-         * funcIds : [127000,127001,100000,100001,100002,102000,102001,102002,102003,102004,103000,103001,103002,103003,103004,104000,104001,104002,104003,104004,105000,
-         * 105001,105002,105003,105004,106000,106001,106002,106003,106004,106005,107000,107001,107002,107003,107004,109002,110000,110001,111000,111001,112000,112001,112002,
-         * 113000,113001,113002,113003,114000,114001,114002,114003,114004,114005,115000,115001,115002,115003,115004,115005,116000,116001,116002,116003,116004,116005,117000,
-         * 117001,118000,118001,119000,119001,120000,120001,120002,120003,120004,121000,121001,121002,121003,121004,122000,122001,122002,130001,200000,200001,300001,300002,
-         * 400000,400001,500000,500001,500002,500003,500004,600000,600001,600002,600003,600004,700000,700001,700002,700003,700004]
-         * roles : [{"createTime":null,"updatedTime":null,"startTime":null,"endTime":null,"page":1,"pageSize":10,"id":2,"name":"管理员","funcIds":null,"remark":null}]
-         * departmentName : null
-         * condition : null
-         * createUserId : 1
-         * accessToken : eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJGR2F4SUQ1dk5YWnBRdWYrUlhjYUh3PT0iLCJ1c2VyTmFtZSI6IldyS2crMlJnWmExc2VuY3dxS1I2NFE9PSIsImlwIjoiSF
-         * NHUDZDQkM0UHVjYXdpNUk2WkNsdz09Iiwid3kiOiJHRDNEZUY3eE1sSVFiSkx4ZE5yRk1RPT0iLCJ1c2VyVHlwZSI6IitwOWY0SStCenk2cnU2Ulo0M3VGOFE9PSIsImV4cCI6MTU5MDU3OTE2MSwibmJmIjoxNTkw
-         * NTc3MzYxfQ.IrzzyW029xr_aoEDUUPV2sjuRHKZGlpjxN4nUqZpePA
-         * refreshToken : eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJGR2F4SUQ1dk5YWnBRdWYrUlhjYUh3PT0iLCJ1c2VyTmFtZSI6IldyS2crMlJnWmExc2VuY3dxS1I2NFE9PSIsImlwIjoiSF
-         * NHUDZDQkM0UHVjYXdpNUk2WkNsdz09Iiwid3kiOiJHRDNEZUY3eE1sSVFiSkx4ZE5yRk1RPT0ifQ.q_sgfHhdTWdOa9OI5QqVmDN4CABmAgtz6HBchrdruYA
-         * jsonToken : {"accessToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJGR2F4SUQ1dk5YWnBRdWYrUlhjYUh3PT0iLCJ1c2VyTmFtZSI6IldyS2crMlJnWmExc2VuY3dxS1I2NFE9
-         * PSIsImlwIjoiSFNHUDZDQkM0UHVjYXdpNUk2WkNsdz09Iiwid3kiOiJHRDNEZUY3eE1sSVFiSkx4ZE5yRk1RPT0iLCJ1c2VyVHlwZSI6IitwOWY0SStCenk2cnU2Ulo0M3VGOFE9PSIsImV4cCI6MTU5MDU3OTE2MS
-         * wibmJmIjoxNTkwNTc3MzYxfQ.IrzzyW029xr_aoEDUUPV2sjuRHKZGlpjxN4nUqZpePA","refreshToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJGR2F4SUQ1dk5YWnBRdWYrUlh
-         * jYUh3PT0iLCJ1c2VyTmFtZSI6IldyS2crMlJnWmExc2VuY3dxS1I2NFE9PSIsImlwIjoiSFNHUDZDQkM0UHVjYXdpNUk2WkNsdz09Iiwid3kiOiJHRDNEZUY3eE1sSVFiSkx4ZE5yRk1RPT0ifQ.q_sgfHhdTWdOa9O
-         * I5QqVmDN4CABmAgtz6HBchrdruYA"}
-         * areaIds : [1,12,6]
-         * areaModelList : null
-         * departmentList : null
-         * collectCount : null
-         * ownedAddressIds : null
-         * source : null
-         * loginType : null
-         * status : null
-         * permit : 1
-         * privacyFlag : null
-         * quota : null
-         * loginStatus : null
-         * ownedAddressNames : null
-         * faces : null
-         */
 
         private String createTime;
         private String updatedTime;
@@ -615,5 +552,5 @@ public class Login extends CommonResult {
                 this.remark = remark;
             }
         }
-    }
+
 }

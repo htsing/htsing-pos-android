@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.htsing.pos.bean.MenusBean;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean.OrderItemsBean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

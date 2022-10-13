@@ -151,6 +151,6 @@ dependencies {
 
     implementation 'cn.hutool:hutool-all:5.8.8'
 
-//    implementation 'org.projectlombok:lombok:1.18.8'
-//    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }

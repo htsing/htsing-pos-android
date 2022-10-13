@@ -27,6 +27,7 @@ import com.htsing.pos.mvp.http.GlobalServerUrl;
 import com.htsing.pos.ui.login.PosActivity;
 import com.htsing.pos.utils.BigDecimalUtils;
 import com.htsing.pos.utils.CommonViewUtils;
+import com.htsing.pos.utils.JsonParseUtils;
 import com.htsing.pos.utils.PreferencesUtil;
 import com.htsing.pos.utils.ResourcesUtils;
 
@@ -280,7 +281,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             getMemberData();
         } else if (eventBean.getType() == BaseEventBean.TEMP_ORDER_DATA) {
             //添加挂单中的产品到购物车
-            ShopOrderDetail.DataBean.RecordsBean item = (ShopOrderDetail.DataBean.RecordsBean) eventBean.getValue();
+            ShopOrderDetail.RecordsBean item = (ShopOrderDetail.RecordsBean) eventBean.getValue();
             getTempOrderListData(item);
 
             //从EventBus消息中取出 订单和会员对象
@@ -384,7 +385,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
 
             if (memberInfoBean == null) {
                 //游客模式
-                json.put("phoneNumber", -1);
+                json.put("phoneNumber", 0);
             } else {
                 json.put("phoneNumber", memberInfoBean.getUserMobile());
             }
@@ -405,7 +406,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             }
             json.put("productList", jsonArray);
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, ShopOrderDetail.class, orderResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, CommonResult.class, orderResult -> {
                 onconfirmOrderResult(orderResult);
             });
         } catch (Exception e) {
@@ -419,10 +420,10 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      *
      * @param result
      */
-    private void onconfirmOrderResult(ShopOrderDetail result) {
+    private void onconfirmOrderResult(CommonResult result) {
         mBact.showLoading(false);
 
-        if (result.getData() == null) {
+        if (result.getResult() == null) {
             showToast("订单生成失败");
             return;
         }
@@ -430,7 +431,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
         if (result.getCode() == 200) {
 //            double actualTotal = result.getData().getRecords().get(0).getActualTotal();
 //            String orderNum = result.getData().getRecords().get(0).getOrderNumber();
-
+            ShopOrderDetail shopOrderDetail = new Gson().fromJson(new Gson().toJson(result.getResult()), ShopOrderDetail.class);
             posActivity.showPayFragment();
             PayEventBean payEventBean = new PayEventBean(BaseEventBean.TYPE_GOTO_PAY_FRAGMENT);
             payEventBean.setValue(result);
@@ -478,7 +479,7 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
             }
             json.put("productList", jsonArray);
             mBact.showLoading();
-            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, ShopOrderDetail.class, orderResult -> {
+            easyPost(json, GlobalServerUrl.DEBUG_URL + GlobalServerUrl.CONFIRMORDERURL, CommonResult.class, orderResult -> {
                 onconfirmTempOrderResult(orderResult);
             });
         } catch (Exception e) {
@@ -490,18 +491,18 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
     /**
      * 订单提交到服务器，生成订单号
      *
-     * @param result
+     * @param commonResult
      */
-    private void onconfirmTempOrderResult(ShopOrderDetail result) {
+    private void onconfirmTempOrderResult(CommonResult commonResult) {
         mBact.showLoading(false);
 
-        if (result.getData() == null) {
+        if (commonResult.getResult() == null) {
             showToast("订单生成失败");
             return;
         }
 
-        if (result.getCode() == 200) {
-
+        if (commonResult.getCode() == 200) {
+            ShopOrderDetail shopOrderDetail = JsonParseUtils.parse(new Gson().toJson(commonResult.getResult(), Map.class), ShopOrderDetail.class);
             //发消息给购物车，清空购物车
             BaseEventBean bean = new BaseEventBean(BaseEventBean.PAY_SUSSESS_CLEAR_CRAT);
             EventBus.getDefault().post(bean);
@@ -737,14 +738,14 @@ public class HomeCartFragment extends HomeBaseFragment implements ModifyCountInt
      *
      * @param item
      */
-    private void getTempOrderListData(ShopOrderDetail.DataBean.RecordsBean item) {
+    private void getTempOrderListData(ShopOrderDetail.RecordsBean item) {
 
-        for (ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean itemsBean : item.getOrderItems()) {
+        for (ShopOrderDetail.RecordsBean.OrderItemsBean itemsBean : item.getOrderItems()) {
             cardListAdapter.setDataBean(getNewTempDataBean(itemsBean));
         }
     }
 
-    private ProductList.DataBean getNewTempDataBean(ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean dataBean) {
+    private ProductList.DataBean getNewTempDataBean(ShopOrderDetail.RecordsBean.OrderItemsBean dataBean) {
         ProductList.DataBean bean = new ProductList.DataBean();
         bean.setSpuCode(String.valueOf(dataBean.getProdId()));
         bean.setOrderNum(1);

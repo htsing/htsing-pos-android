@@ -20,7 +20,7 @@ import com.htsing.pos.utils.PreferencesUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TempOrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.RecordsBean> {
+public class TempOrderListHolder extends BaseListVH<ShopOrderDetail.RecordsBean> {
 
 
     private ListViewItemClickInterface itemClickInterface;
@@ -45,7 +45,7 @@ public class TempOrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.Rec
 
 
     @Override
-    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetail.DataBean.RecordsBean item) {
+    public void convert(@NonNull BaseViewHolder helper, ShopOrderDetail.RecordsBean item) {
         if (item == null) {
             return;
         }
@@ -121,6 +121,6 @@ public class TempOrderListHolder extends BaseListVH<ShopOrderDetail.DataBean.Rec
     }
 
     public interface ListViewItemClickInterface {
-        void onHandleItemClick(ShopOrderDetail.DataBean.RecordsBean item);
+        void onHandleItemClick(ShopOrderDetail.RecordsBean item);
     }
 }

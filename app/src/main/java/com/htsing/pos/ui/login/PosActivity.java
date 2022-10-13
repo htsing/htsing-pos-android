@@ -81,7 +81,7 @@ public class PosActivity extends BaseAct implements ICallback {
     //挂单
     private TempOrderFragment tempOrderFragment;
 
-    //销售单
+    //支付结算
     @BindView(R.id.layout_pay_fragment)
     LinearLayout layout_pay_fragment;
     //选择会员
@@ -206,6 +206,7 @@ public class PosActivity extends BaseAct implements ICallback {
             showMemberFragment();
         });
 
+
         CommonViewUtils.setOnClick(layout_open_drawer, view -> {
             openDrawer();//打开钱箱
         });
@@ -214,7 +215,6 @@ public class PosActivity extends BaseAct implements ICallback {
             Intent intent = new Intent(getApplicationContext(), AddProductActivity.class);
             startActivity(intent);
         });
-
 
         CommonViewUtils.setOnClick(layout_shift_job, view -> {
             //交接班
@@ -226,7 +226,6 @@ public class PosActivity extends BaseAct implements ICallback {
 
         connectPrintService();
         connectKPrintService();
-
         initData();
     }
 
@@ -400,7 +399,7 @@ public class PosActivity extends BaseAct implements ICallback {
      *
      * @param goods_data 订单数据
      */
-    public void paySuccessToPrinter(String goods_data, ShopOrderDetail.DataBean.RecordsBean orderBean) {
+    public void paySuccessToPrinter(String goods_data, ShopOrderDetail.RecordsBean orderBean) {
         XLog.d(goods_data);
         if (orderBean != null)
             printerPresenter.setRelustOrder(orderBean);
@@ -414,7 +413,7 @@ public class PosActivity extends BaseAct implements ICallback {
      *
      * @param goods_data 订单数据
      */
-    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.DataBean.RecordsBean orderBean, HomeMemberInfo memberInfoBean) {
+    public void paySuccessToPrinter(String goods_data, int payMode, ShopOrderDetail.RecordsBean orderBean, HomeMemberInfo memberInfoBean) {
         XLog.d(goods_data);
 
         printerPresenter.setRelustOrder(orderBean);

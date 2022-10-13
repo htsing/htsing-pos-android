@@ -5,7 +5,7 @@ import com.htsing.pos.easyhttp.CommonResult;
 import java.io.Serializable;
 import java.util.List;
 
-public class ListMemberInfo extends CommonResult {
+public class ListMemberInfo {
 
 
     /**
@@ -13,45 +13,6 @@ public class ListMemberInfo extends CommonResult {
      * resultMsg : null
      */
 
-    private List<DataBean> data;
-
-    public List<DataBean> getData() {
-        return data;
-    }
-
-    public void setData(List<DataBean> data) {
-        this.data = data;
-    }
-
-    public static class DataBean implements Serializable {
-        /**
-         * userId : 70086cb7a8504f6b854b4ade9f9088a3
-         * nickName : 丁华剑
-         * realName : null
-         * userMail : null
-         * loginPassword : null
-         * payPassword : null
-         * userMobile : 18611128418
-         * modifyTime : 2020-08-14 14:42:23
-         * userRegtime : 2020-08-14 14:42:23
-         * userRegip : null
-         * userLasttime : null
-         * userLastip : null
-         * userMemo : null
-         * sex : M
-         * birthDate : null
-         * pic : https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epGdmn7NtvEQgsmUUKasjTibggW5j5c0KvI7Aj8UVffNWU8uYYsRbYhHzPoNpEFlDonDmN1QrsicJgQ/132
-         * status : 1
-         * score : null
-         * yqm : hhn74j
-         * puserid : 7adc44a9ac18440497a00b1b8e42f2d9
-         * account : 0.0
-         * extensionWorker : 0
-         * vipLevel : 1
-         * userAccount : 306.1
-         * code : null
-         * oldAccount : 2032.3
-         */
 
         private String userId;
         private String nickName;
@@ -287,5 +248,4 @@ public class ListMemberInfo extends CommonResult {
         public void setOldAccount(double oldAccount) {
             this.oldAccount = oldAccount;
         }
-    }
 }

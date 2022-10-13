@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.htsing.pos.bean.ShopOrderDetail;
-import com.htsing.pos.bean.ShopOrderDetail.DataBean.RecordsBean.OrderItemsBean;
+import com.htsing.pos.bean.ShopOrderDetail.RecordsBean.OrderItemsBean;
 
 import com.bumptech.glide.Glide;
 import com.htsing.pos.R;
@@ -24,7 +24,7 @@ public class OrderListdetailAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<OrderItemsBean> list;//子订单的list 数量
-    private ShopOrderDetail.DataBean.RecordsBean recordsBean; //订单对象
+    private ShopOrderDetail.RecordsBean recordsBean; //订单对象
     private int mFlag;
     private ModifyCountInterface modifyCountInterface;
 
@@ -34,7 +34,7 @@ public class OrderListdetailAdapter extends BaseAdapter {
     private int productNum = 0;
     private int preProductNum = 0;
 
-    public OrderListdetailAdapter(Context context, ShopOrderDetail.DataBean.RecordsBean orderlist, int flag) {
+    public OrderListdetailAdapter(Context context, ShopOrderDetail.RecordsBean orderlist, int flag) {
         this.mContext = context;
         this.list = orderlist.getOrderItems();
         this.mFlag = flag;
